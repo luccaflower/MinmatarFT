@@ -1,0 +1,12 @@
+[package]
+name = "minmatar_ft"
+version = "0.1.0"
+authors = ["Lucca Kaasgaard Christiansen <rkaasgaard@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+
+[workspace]
+members = ["domain"]
