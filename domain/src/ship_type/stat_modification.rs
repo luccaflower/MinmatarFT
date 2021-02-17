@@ -1,4 +1,4 @@
-use num_traits::NumOps;
+use num_traits::{NumOps, Zero};
 use std::cmp::Ordering;
 use std::ops::Deref;
 
@@ -35,6 +35,21 @@ impl StatModification {
             power_grid,
             cpu,
         }
+    }
+}
+
+impl Default for StatModification {
+    fn default() -> Self {
+        Self::new(
+            ModificationType::default(),
+            ModificationType::default(),
+            ModificationType::default(),
+            ModificationType::default(),
+            ModificationType::default(),
+            ModificationType::default(),
+            ModificationType::default(),
+            ModificationType::default(),
+        )
     }
 }
 
@@ -75,6 +90,14 @@ where
         }
     }
 }
+impl<T> ModificationType<T>
+where
+    T: NumOps + PartialEq + PartialOrd + Zero,
+{
+    pub fn default() -> Self {
+        Self::Additive(num_traits::identities::zero())
+    }
+}
 
 impl<T> PartialEq for &ModificationType<T>
 where
@@ -102,7 +125,8 @@ where
 {
     fn cmp(&self, other: &Self) -> Ordering {
         if self.additive() == other.additive() {
-            self.deref().cmp(other)
+            let v: &T = self.deref();
+            v.cmp(other.deref())
         } else {
             if self.additive() {
                 Ordering::Greater
