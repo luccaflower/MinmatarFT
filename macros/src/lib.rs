@@ -1,7 +1,9 @@
 mod model;
 
 use crate::model::category_id::CategoryId;
+use crate::model::dogma_attribute::DogmaAttribute;
 use crate::model::group_id::GroupId;
+use crate::model::type_dogma::TypeDogma;
 use crate::model::type_id::TypeId;
 use proc_macro::TokenStream;
 use std::collections::hash_map::RandomState;
@@ -67,7 +69,7 @@ async fn download_static_data() {
 pub fn generate_all_data(_: TokenStream) -> TokenStream {
     let runtime = Runtime::new().unwrap();
     runtime.block_on(download_static_data());
-    let _ = parse_category_ids();
+    let _ = parse_type_dogma();
     "".parse().unwrap()
 }
 
@@ -117,4 +119,33 @@ fn parse_category_ids() -> HashMap<u64, CategoryId> {
     .into_iter()
     .filter(|(_, x)| x.published.clone())
     .collect::<HashMap<u64, CategoryId>>()
+}
+
+fn parse_dogma_attributes() -> HashMap<u64, DogmaAttribute> {
+    serde_yaml::from_reader::<_, HashMap<u64, DogmaAttribute>>(
+        File::open(
+            static_dir_path()
+                .join("sde")
+                .join("fsd")
+                .join("dogmaAttributes.yaml"),
+        )
+        .unwrap(),
+    )
+    .unwrap()
+    .into_iter()
+    .filter(|(_, x)| x.published.clone())
+    .collect::<HashMap<u64, DogmaAttribute>>()
+}
+
+fn parse_type_dogma() -> HashMap<u64, TypeDogma> {
+    serde_yaml::from_reader::<_, HashMap<u64, TypeDogma>>(
+        File::open(
+            static_dir_path()
+                .join("sde")
+                .join("fsd")
+                .join("typeDogma.yaml"),
+        )
+        .unwrap(),
+    )
+    .unwrap()
 }
