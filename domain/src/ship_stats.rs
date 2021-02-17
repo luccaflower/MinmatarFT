@@ -48,12 +48,12 @@ impl ShipStats {
         let (
             shield_hp,
             armor_hp,
-            mut hull_hp,
-            mut velocity,
-            mut agility,
-            mut mass,
-            mut power_grid,
-            mut cpu,
+            hull_hp,
+            velocity,
+            agility,
+            mass,
+            power_grid,
+            cpu,
         ) = stat_mods.into_iter().fold(
             (
                 vec![],
