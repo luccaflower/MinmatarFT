@@ -1,7 +1,10 @@
 mod model;
 
+use crate::model::category_id::CategoryId;
+use crate::model::group_id::GroupId;
 use crate::model::type_id::TypeId;
 use proc_macro::TokenStream;
+use std::collections::hash_map::RandomState;
 use std::collections::HashMap;
 use std::env::current_dir;
 use std::fs::{create_dir, File};
@@ -64,7 +67,12 @@ async fn download_static_data() {
 pub fn generate_all_data(_: TokenStream) -> TokenStream {
     let runtime = Runtime::new().unwrap();
     runtime.block_on(download_static_data());
-    let types = serde_yaml::from_reader::<_, HashMap<u64, TypeId>>(
+    let _ = parse_category_ids();
+    "".parse().unwrap()
+}
+
+fn parse_type_ids() -> HashMap<u64, TypeId> {
+    serde_yaml::from_reader::<_, HashMap<u64, TypeId>>(
         File::open(
             static_dir_path()
                 .join("sde")
@@ -76,6 +84,37 @@ pub fn generate_all_data(_: TokenStream) -> TokenStream {
     .unwrap()
     .into_iter()
     .filter(|(_, x)| x.published.clone())
-    .collect::<HashMap<u64, TypeId>>();
-    "".parse().unwrap()
+    .collect::<HashMap<u64, TypeId>>()
+}
+
+fn parse_group_ids() -> HashMap<u64, GroupId> {
+    serde_yaml::from_reader::<_, HashMap<u64, GroupId>>(
+        File::open(
+            static_dir_path()
+                .join("sde")
+                .join("fsd")
+                .join("groupIDs.yaml"),
+        )
+        .unwrap(),
+    )
+    .unwrap()
+    .into_iter()
+    .filter(|(_, x)| x.published.clone())
+    .collect::<HashMap<u64, GroupId>>()
+}
+
+fn parse_category_ids() -> HashMap<u64, CategoryId> {
+    serde_yaml::from_reader::<_, HashMap<u64, CategoryId>>(
+        File::open(
+            static_dir_path()
+                .join("sde")
+                .join("fsd")
+                .join("categoryIDs.yaml"),
+        )
+        .unwrap(),
+    )
+    .unwrap()
+    .into_iter()
+    .filter(|(_, x)| x.published.clone())
+    .collect::<HashMap<u64, CategoryId>>()
 }
