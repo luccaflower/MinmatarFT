@@ -11,7 +11,7 @@ pub struct Fit<'a> {
 
 impl<'a> Fit<'a> {
     pub fn new(ship: &'a Ship) -> Self {
-        fn generate_empty(size: u8) -> Box<[Option<&'a Module>]> {
+        fn generate_empty<'a>(size: u8) -> Box<[Option<&'a Module>]> {
             (0..size).into_iter().map(|_|None).collect::<Vec<Option<&'a Module>>>().into_boxed_slice()
         }
         Self {

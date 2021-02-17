@@ -10,4 +10,4 @@ edition = "2018"
 domain = {path="domain"}
 
 [workspace]
-members = ["domain"]
+members = ["domain", "macros"]
