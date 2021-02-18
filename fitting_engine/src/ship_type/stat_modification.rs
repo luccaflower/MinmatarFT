@@ -1,8 +1,9 @@
 use num_traits::{NumOps, Zero};
+use serde::{Deserialize, Serialize};
 use std::cmp::Ordering;
 use std::ops::Deref;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct StatModification {
     pub(crate) shield_hp: ModificationType<usize>,
     pub(crate) armor_hp: ModificationType<usize>,
@@ -53,7 +54,7 @@ impl Default for StatModification {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ModificationType<T>
 where
     T: NumOps + PartialEq + PartialOrd,

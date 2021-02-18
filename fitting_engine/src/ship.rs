@@ -1,11 +1,12 @@
 use crate::faction::Faction;
 use crate::ship_stats::ShipStats;
 use crate::ship_type::ShipType;
+use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
 
-#[derive(Debug, Clone)]
-pub struct Ship {
-    pub name: Cow<'static, str>,
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Ship<'a> {
+    pub name: Cow<'a, str>,
     pub ship_type: ShipType,
     pub faction: Faction,
     pub high_slots: u8,
@@ -14,7 +15,7 @@ pub struct Ship {
     pub ship_stats: ShipStats,
 }
 
-impl Ship {
+impl Ship<'_> {
     pub fn new<T: Into<Cow<'static, str>>>(
         name: T,
         ship_type: ShipType,

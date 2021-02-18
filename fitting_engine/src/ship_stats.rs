@@ -1,7 +1,8 @@
 use crate::ship_type::stat_modification::{ModificationType, StatModification};
 use num_traits::{NumOps, Zero};
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ShipStats {
     pub shield_hp: usize,
     pub armor_hp: usize,
