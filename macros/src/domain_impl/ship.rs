@@ -6,15 +6,15 @@ use proc_macro2::TokenStream;
 use quote::ToTokens;
 
 #[derive(Debug, Clone)]
-pub struct ShipWrapper(Ship);
+pub struct ShipWrapper<'a>(Ship<'a>);
 
-impl ShipWrapper {
-    pub fn new(ship: Ship) -> Self {
+impl<'a> ShipWrapper<'a> {
+    pub fn new(ship: Ship<'a>) -> Self {
         Self(ship)
     }
 }
 
-impl ToTokens for ShipWrapper {
+impl ToTokens for ShipWrapper<'_> {
     fn to_tokens(&self, tokens: &mut TokenStream) {
         let name = self.0.name.to_string();
         let ship_type = ShipTypeWrapper::new(self.0.ship_type.clone());

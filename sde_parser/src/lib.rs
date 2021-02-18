@@ -64,7 +64,7 @@ pub type InputSdeData = (
     HashMap<u64, TypeDogma>,
 );
 
-pub type OutputSdeData = (HashMap<String, Ship>);
+pub type OutputSdeData<'a> = (HashMap<String, Ship<'a>>);
 
 impl<A, B, C, D, E> Into<InputSdeData> for ParserArgument<A, B, C, D, E>
 where
@@ -101,7 +101,7 @@ where
     }
 }
 
-pub fn parse<T: Into<InputSdeData>>(input: T) -> Result<OutputSdeData, Box<dyn std::error::Error>> {
+pub fn parse<'a, T: Into<InputSdeData>>(input: T) -> Result<OutputSdeData<'a>, Box<dyn std::error::Error>> {
     let (type_ids, group_ids, category_ids, dogma_attributes, type_dogmas) = input.into();
     let (ships, _rest_data): (
         Vec<(
