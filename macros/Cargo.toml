@@ -14,8 +14,7 @@ syn = "1.0.6"
 quote = "1.0"
 proc-macro-hack = "0.5.19"
 zip = "0.5.10"
-serde = { version = "1.0", features = ["derive"] }
-serde_yaml = "0.8"
 proc-macro2 = "1.0.24"
 
 fitting_engine = { path = "../fitting_engine" }
+sde_parser = {path = "../sde_parser"}

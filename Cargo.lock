@@ -404,8 +404,7 @@ dependencies = [
  "proc-macro2",
  "quote",
  "reqwest",
- "serde",
- "serde_yaml",
+ "sde_parser",
  "syn",
  "tokio",
  "zip",
@@ -728,6 +727,15 @@ checksum = "8f05ba609c234e60bee0d547fe94a4c7e9da733d1c962cf6e59efa4cd9c8bc75"
 dependencies = [
  "lazy_static",
  "winapi",
+]
+
+[[package]]
+name = "sde_parser"
+version = "0.1.0"
+dependencies = [
+ "fitting_engine",
+ "serde",
+ "serde_yaml",
 ]
 
 [[package]]
