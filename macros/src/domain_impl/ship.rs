@@ -1,15 +1,15 @@
-use quote::ToTokens;
+use crate::domain_impl::faction::FactionWrapper;
+use crate::domain_impl::ship_stats::ShipStatsWrapper;
+use crate::domain_impl::ship_type::ShipTypeWrapper;
 use domain::ship::Ship;
 use proc_macro2::TokenStream;
-use crate::domain_impl::ship_stats::ShipStatsWrapper;
-use crate::domain_impl::faction::FactionWrapper;
-use crate::domain_impl::ship_type::ShipTypeWrapper;
+use quote::ToTokens;
 
 #[derive(Debug, Clone)]
 pub struct ShipWrapper(Ship);
 
 impl ShipWrapper {
-    pub fn new(ship: Ship) -> Self{
+    pub fn new(ship: Ship) -> Self {
         Self(ship)
     }
 }
@@ -37,4 +37,3 @@ impl ToTokens for ShipWrapper {
         lok.to_tokens(tokens);
     }
 }
-

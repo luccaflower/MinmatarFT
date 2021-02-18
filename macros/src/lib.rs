@@ -1,6 +1,8 @@
-mod model;
 mod domain_impl;
+mod model;
 
+use crate::domain_impl::ship::ShipWrapper;
+use crate::domain_impl::slice::SliceWrapper;
 use crate::model::category_id::CategoryId;
 use crate::model::dogma_attribute::DogmaAttribute;
 use crate::model::group_id::GroupId;
@@ -20,8 +22,6 @@ use std::ops::Deref;
 use std::path::Path;
 use std::{fs, io};
 use tokio::runtime::Runtime;
-use crate::domain_impl::ship::ShipWrapper;
-use crate::domain_impl::slice::SliceWrapper;
 
 fn static_dir_path() -> &'static Path {
     Path::new("__static_data")
@@ -102,15 +102,18 @@ pub fn generate_all_data(_: TokenStream) -> TokenStream {
         .map(|x| x.unwrap())
         .collect::<Vec<(TypeId, &GroupId, &CategoryId, Vec<(f64, &DogmaAttribute)>)>>();
     */
-    let a = SliceWrapper::new(vec![ShipWrapper::new(Ship::new(
-        "hello",
-        ShipType::Cruiser(CruiserType::T1),
-        Faction::Amarr,
-        4,
-        5,
-        5,
-        ShipStats::new(1, 1, 1, 1, 1, 1, 1, 1),
-    ))].into_boxed_slice());
+    let a = SliceWrapper::new(
+        vec![ShipWrapper::new(Ship::new(
+            "hello",
+            ShipType::Cruiser(CruiserType::T1),
+            Faction::Amarr,
+            4,
+            5,
+            5,
+            ShipStats::new(1, 1, 1, 1, 1, 1, 1, 1),
+        ))]
+        .into_boxed_slice(),
+    );
     TokenStream::from(quote::quote! {
         static ALL_SHIPS: [domain::ship::Ship; 1] = #a;
     })

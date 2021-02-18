@@ -1,6 +1,6 @@
+use proc_macro2::TokenStream;
+use proc_macro2::TokenTree::{Literal, Punct};
 use quote::{ToTokens, TokenStreamExt};
-use proc_macro2::{TokenStream};
-use proc_macro2::TokenTree::{Punct, Literal};
 use std::str::FromStr;
 
 #[derive(Debug, Clone)]
@@ -12,14 +12,22 @@ impl<T> SliceWrapper<T> {
     }
 }
 
-impl<T> ToTokens for SliceWrapper<T> where T: ToTokens {
+impl<T> ToTokens for SliceWrapper<T>
+where
+    T: ToTokens,
+{
     fn to_tokens(&self, tokens: &mut TokenStream) {
-        let inner: String = self.0.iter().map(|x| {
-            let lok = quote::quote! {
-                #x
-            };
-            lok.to_string()
-        }).collect::<Vec<String>>().join(",");
+        let inner: String = self
+            .0
+            .iter()
+            .map(|x| {
+                let lok = quote::quote! {
+                    #x
+                };
+                lok.to_string()
+            })
+            .collect::<Vec<String>>()
+            .join(",");
         tokens.extend(TokenStream::from_str(format!("[{}]", inner).as_str()).unwrap())
     }
 }

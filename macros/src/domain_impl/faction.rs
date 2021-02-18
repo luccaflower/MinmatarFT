@@ -1,12 +1,12 @@
-use quote::ToTokens;
-use proc_macro2::TokenStream;
 use domain::faction::Faction;
+use proc_macro2::TokenStream;
+use quote::ToTokens;
 
 #[derive(Debug, Clone)]
 pub struct FactionWrapper(Faction);
 
 impl FactionWrapper {
-    pub fn new(faction: Faction) -> Self{
+    pub fn new(faction: Faction) -> Self {
         Self(faction)
     }
 }

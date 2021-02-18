@@ -1,6 +1,6 @@
+use domain::ship::Ship;
 use macros::generate_all_data;
 use std::borrow::Cow;
-use domain::ship::Ship;
 
 generate_all_data!();
 
