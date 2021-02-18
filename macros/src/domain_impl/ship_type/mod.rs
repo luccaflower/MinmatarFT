@@ -1,9 +1,9 @@
-use domain::ship_type::battlecruiser::BattlecruiserType;
-use domain::ship_type::battleship::BattleshipType;
-use domain::ship_type::cruiser::CruiserType;
-use domain::ship_type::destroyer::DestroyerType;
-use domain::ship_type::frigate::FrigateType;
-use domain::ship_type::ShipType;
+use fitting_engine::ship_type::battlecruiser::BattlecruiserType;
+use fitting_engine::ship_type::battleship::BattleshipType;
+use fitting_engine::ship_type::cruiser::CruiserType;
+use fitting_engine::ship_type::destroyer::DestroyerType;
+use fitting_engine::ship_type::frigate::FrigateType;
+use fitting_engine::ship_type::ShipType;
 use proc_macro2::TokenStream;
 use quote::ToTokens;
 
@@ -21,72 +21,72 @@ impl ToTokens for ShipTypeWrapper {
         let lok = match &self.0 {
             ShipType::Frigate(x) => match x {
                 FrigateType::T1 => quote::quote! {
-                    domain::ship_type::ShipType::Frigate(domain::ship_type::frigate::FrigateType::T1)
+                    fitting_engine::ship_type::ShipType::Frigate(fitting_engine::ship_type::frigate::FrigateType::T1)
                 },
                 FrigateType::Interceptor => quote::quote! {
-                    domain::ship_type::ShipType::Frigate(domain::ship_type::frigate::FrigateType::Interceptor)
+                    fitting_engine::ship_type::ShipType::Frigate(fitting_engine::ship_type::frigate::FrigateType::Interceptor)
                 },
                 FrigateType::Assault => quote::quote! {
-                    domain::ship_type::ShipType::Frigate(domain::ship_type::frigate::FrigateType::Assault)
+                    fitting_engine::ship_type::ShipType::Frigate(fitting_engine::ship_type::frigate::FrigateType::Assault)
                 },
                 FrigateType::ElectronicAttack => quote::quote! {
-                    domain::ship_type::ShipType::Frigate(domain::ship_type::frigate::FrigateType::ElectronicAttack)
+                    fitting_engine::ship_type::ShipType::Frigate(fitting_engine::ship_type::frigate::FrigateType::ElectronicAttack)
                 },
                 FrigateType::Logistics => quote::quote! {
-                    domain::ship_type::ShipType::Frigate(domain::ship_type::frigate::FrigateType::Logistics)
+                    fitting_engine::ship_type::ShipType::Frigate(fitting_engine::ship_type::frigate::FrigateType::Logistics)
                 },
             },
             ShipType::Destroyer(x) => match x {
                 DestroyerType::T1 => quote::quote! {
-                    domain::ship_type::ShipType::Destroyer(domain::ship_type::destroyer::DestroyerType::T1)
+                    fitting_engine::ship_type::ShipType::Destroyer(fitting_engine::ship_type::destroyer::DestroyerType::T1)
                 },
                 DestroyerType::Interdictor => quote::quote! {
-                    domain::ship_type::ShipType::Destroyer(domain::ship_type::destroyer::DestroyerType::Interdictor)
+                    fitting_engine::ship_type::ShipType::Destroyer(fitting_engine::ship_type::destroyer::DestroyerType::Interdictor)
                 },
                 DestroyerType::Command => quote::quote! {
-                    domain::ship_type::ShipType::Destroyer(domain::ship_type::destroyer::DestroyerType::Command)
+                    fitting_engine::ship_type::ShipType::Destroyer(fitting_engine::ship_type::destroyer::DestroyerType::Command)
                 },
                 DestroyerType::Tactical => quote::quote! {
-                    domain::ship_type::ShipType::Destroyer(domain::ship_type::destroyer::DestroyerType::Tactical)
+                    fitting_engine::ship_type::ShipType::Destroyer(fitting_engine::ship_type::destroyer::DestroyerType::Tactical)
                 },
             },
             ShipType::Cruiser(x) => match x {
                 CruiserType::T1 => quote::quote! {
-                    domain::ship_type::ShipType::Cruiser(domain::ship_type::cruiser::CruiserType::T1)
+                    fitting_engine::ship_type::ShipType::Cruiser(fitting_engine::ship_type::cruiser::CruiserType::T1)
                 },
                 CruiserType::HeavyAssault => quote::quote! {
-                    domain::ship_type::ShipType::Cruiser(domain::ship_type::cruiser::CruiserType::HeavyAssault)
+                    fitting_engine::ship_type::ShipType::Cruiser(fitting_engine::ship_type::cruiser::CruiserType::HeavyAssault)
                 },
                 CruiserType::HeavyInterdictor => quote::quote! {
-                    domain::ship_type::ShipType::Cruiser(domain::ship_type::cruiser::CruiserType::HeavyInterdictor)
+                    fitting_engine::ship_type::ShipType::Cruiser(fitting_engine::ship_type::cruiser::CruiserType::HeavyInterdictor)
                 },
                 CruiserType::Logistics => quote::quote! {
-                    domain::ship_type::ShipType::Cruiser(domain::ship_type::cruiser::CruiserType::Logistics)
+                    fitting_engine::ship_type::ShipType::Cruiser(fitting_engine::ship_type::cruiser::CruiserType::Logistics)
                 },
                 CruiserType::Strategic => quote::quote! {
-                    domain::ship_type::ShipType::Cruiser(domain::ship_type::cruiser::CruiserType::Strategic)
+                    fitting_engine::ship_type::ShipType::Cruiser(fitting_engine::ship_type::cruiser::CruiserType::Strategic)
                 },
                 CruiserType::ForceRecon => quote::quote! {
-                    domain::ship_type::ShipType::Cruiser(domain::ship_type::cruiser::CruiserType::ForceRecon)
+                    fitting_engine::ship_type::ShipType::Cruiser(fitting_engine::ship_type::cruiser::CruiserType::ForceRecon)
                 },
                 CruiserType::CombatRecon => quote::quote! {
-                    domain::ship_type::ShipType::Cruiser(domain::ship_type::cruiser::CruiserType::CombatRecon)
+                    fitting_engine::ship_type::ShipType::Cruiser(fitting_engine::ship_type::cruiser::CruiserType::CombatRecon)
                 },
             },
             ShipType::Battlecruiser(x) => match x {
                 BattlecruiserType::T1 => quote::quote! {
-                    domain::ship_type::ShipType::Battlecruiser(domain::ship_type::battlecruiser::BattlecruiserType::T1)
+                    fitting_engine::ship_type::ShipType::Battlecruiser(fitting_engine::ship_type::battlecruiser::BattlecruiserType::T1)
                 },
                 BattlecruiserType::Command => quote::quote! {
-                    domain::ship_type::ShipType::Battlecruiser(domain::ship_type::battlecruiser::BattlecruiserType::Command)
+                    fitting_engine::ship_type::ShipType::Battlecruiser(fitting_engine::ship_type::battlecruiser::BattlecruiserType::Command)
                 },
             },
             ShipType::Battleship(x) => match x {
                 BattleshipType::T1 => quote::quote! {
-                    domain::ship_type::ShipType::Battleship(domain::ship_type::battleship::BattleshipType::T1)
+                    fitting_engine::ship_type::ShipType::Battleship(fitting_engine::ship_type::battleship::BattleshipType::T1)
                 },
                 BattleshipType::Marauder => quote::quote! {
-                    domain::ship_type::ShipType::Battleship(domain::ship_type::battleship::BattleshipType::Marauder)
+                    fitting_engine::ship_type::ShipType::Battleship(fitting_engine::ship_type::battleship::BattleshipType::Marauder)
                 },
             },
         };

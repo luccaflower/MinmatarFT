@@ -1,4 +1,4 @@
-use domain::ship::Ship;
+use fitting_engine::ship::Ship;
 use macros::generate_all_data;
 use std::borrow::Cow;
 

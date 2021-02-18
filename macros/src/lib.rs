@@ -12,11 +12,11 @@ use crate::model::group_id::GroupId;
 use crate::model::type_dogma::TypeDogma;
 use crate::model::type_id::TypeId;
 use crate::ship_type_ids::ship_type_by_id;
-use domain::faction::Faction;
-use domain::ship::Ship;
-use domain::ship_stats::ShipStats;
-use domain::ship_type::cruiser::CruiserType;
-use domain::ship_type::ShipType;
+use fitting_engine::faction::Faction;
+use fitting_engine::ship::Ship;
+use fitting_engine::ship_stats::ShipStats;
+use fitting_engine::ship_type::cruiser::CruiserType;
+use fitting_engine::ship_type::ShipType;
 use proc_macro::TokenStream;
 use std::collections::HashMap;
 use std::env::current_dir;
@@ -138,7 +138,7 @@ pub fn generate_all_data(_: TokenStream) -> TokenStream {
         .into_boxed_slice(),
     );
     TokenStream::from(quote::quote! {
-        static ALL_SHIPS: [domain::ship::Ship; 1] = #a;
+        static ALL_SHIPS: [fitting_engine::ship::Ship; 1] = #a;
     })
 }
 

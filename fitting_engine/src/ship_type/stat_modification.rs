@@ -71,7 +71,7 @@ where
         match self {
             Self::Additive(_) => true,
             Self::Multiplicative(_) => false,
-            Self::FittingCost(_) => false
+            Self::FittingCost(_) => false,
         }
     }
 

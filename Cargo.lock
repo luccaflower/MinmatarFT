@@ -107,13 +107,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "domain"
-version = "0.1.0"
-dependencies = [
- "num-traits",
-]
-
-[[package]]
 name = "dtoa"
 version = "0.4.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -126,6 +119,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "80df024fbc5ac80f87dfef0d9f5209a252f2a497f7f42944cff24d8253cac065"
 dependencies = [
  "cfg-if 1.0.0",
+]
+
+[[package]]
+name = "fitting_engine"
+version = "0.1.0"
+dependencies = [
+ "num-traits",
 ]
 
 [[package]]
@@ -399,7 +399,7 @@ dependencies = [
 name = "macros"
 version = "0.1.0"
 dependencies = [
- "domain",
+ "fitting_engine",
  "proc-macro-hack",
  "proc-macro2",
  "quote",
@@ -442,7 +442,7 @@ dependencies = [
 name = "minmatar_ft"
 version = "0.1.0"
 dependencies = [
- "domain",
+ "fitting_engine",
  "static_data",
 ]
 
@@ -829,7 +829,7 @@ dependencies = [
 name = "static_data"
 version = "0.1.0"
 dependencies = [
- "domain",
+ "fitting_engine",
  "macros",
 ]
 

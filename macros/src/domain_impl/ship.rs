@@ -1,7 +1,7 @@
 use crate::domain_impl::faction::FactionWrapper;
 use crate::domain_impl::ship_stats::ShipStatsWrapper;
 use crate::domain_impl::ship_type::ShipTypeWrapper;
-use domain::ship::Ship;
+use fitting_engine::ship::Ship;
 use proc_macro2::TokenStream;
 use quote::ToTokens;
 
@@ -24,7 +24,7 @@ impl ToTokens for ShipWrapper {
         let low_slots = self.0.low_slots.clone();
         let ship_stats = ShipStatsWrapper::new(self.0.ship_stats.clone());
         let lok = quote::quote! {
-            domain::ship::Ship {
+            fitting_engine::ship::Ship {
                 name: Cow::Borrowed(#name),
                 ship_type: #ship_type,
                 faction: #faction,

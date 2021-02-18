@@ -1,4 +1,4 @@
-use domain::ship_stats::ShipStats;
+use fitting_engine::ship_stats::ShipStats;
 use proc_macro2::TokenStream;
 use quote::ToTokens;
 
@@ -24,7 +24,7 @@ impl ToTokens for ShipStatsWrapper {
             cpu,
         } = self.0.clone();
         let lok = quote::quote! {
-            domain::ship_stats::ShipStats {
+            fitting_engine::ship_stats::ShipStats {
                 shield_hp: #shield_hp,
                 armor_hp: #armor_hp,
                 hull_hp: #hull_hp,

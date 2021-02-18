@@ -8,4 +8,4 @@ edition = "2018"
 
 [dependencies]
 macros = { path = "../macros" }
-domain = { path = "../domain" }
+fitting_engine = { path = "../fitting_engine" }

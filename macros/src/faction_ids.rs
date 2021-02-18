@@ -1,4 +1,4 @@
-use domain::faction::Faction;
+use fitting_engine::faction::Faction;
 
 pub fn faction_by_id(id: u64) -> Faction {
     match id {

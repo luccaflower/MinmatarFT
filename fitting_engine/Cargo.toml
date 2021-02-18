@@ -1,5 +1,5 @@
 [package]
-name = "domain"
+name = "fitting_engine"
 version = "0.1.0"
 authors = ["Lucca Kaasgaard Christiansen <1078059@ucn.dk>"]
 edition = "2018"

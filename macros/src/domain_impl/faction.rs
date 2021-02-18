@@ -1,4 +1,4 @@
-use domain::faction::Faction;
+use fitting_engine::faction::Faction;
 use proc_macro2::TokenStream;
 use quote::ToTokens;
 
@@ -15,46 +15,46 @@ impl ToTokens for FactionWrapper {
     fn to_tokens(&self, tokens: &mut TokenStream) {
         let tok = match &self.0 {
             Faction::Amarr => quote::quote! {
-                domain::faction::Faction::Amarr
+                fitting_engine::faction::Faction::Amarr
             },
             Faction::Minmatar => quote::quote! {
-                domain::faction::Faction::Minmatar
+                fitting_engine::faction::Faction::Minmatar
             },
             Faction::Caldari => quote::quote! {
-                domain::faction::Faction::Caldari
+                fitting_engine::faction::Faction::Caldari
             },
             Faction::Gallente => quote::quote! {
-                domain::faction::Faction::Gallente
+                fitting_engine::faction::Faction::Gallente
             },
             Faction::AngelCartel => quote::quote! {
-                domain::faction::Faction::AngelCartel
+                fitting_engine::faction::Faction::AngelCartel
             },
             Faction::MordusLegion => quote::quote! {
-                domain::faction::Faction::MordusLegion
+                fitting_engine::faction::Faction::MordusLegion
             },
             Faction::Guristas => quote::quote! {
-                domain::faction::Faction::Guristas
+                fitting_engine::faction::Faction::Guristas
             },
             Faction::BloodRaiders => quote::quote! {
-                domain::faction::Faction::BloodRaiders
+                fitting_engine::faction::Faction::BloodRaiders
             },
             Faction::SanshasNation => quote::quote! {
-                domain::faction::Faction::SanshasNation
+                fitting_engine::faction::Faction::SanshasNation
             },
             Faction::Serpentis => quote::quote! {
-                domain::faction::Faction::Serpentis
+                fitting_engine::faction::Faction::Serpentis
             },
             Faction::Triglavians => quote::quote! {
-                domain::faction::Faction::Triglavians
+                fitting_engine::faction::Faction::Triglavians
             },
             Faction::SistersOfEve => quote::quote! {
-                domain::faction::Faction::SistersOfEve
+                fitting_engine::faction::Faction::SistersOfEve
             },
             Faction::SocietyofConsciousThought => quote::quote! {
-                domain::faction::Faction::SocietyofConsciousThought
+                fitting_engine::faction::Faction::SocietyofConsciousThought
             },
             Faction::EdenCom => quote::quote! {
-                domain::faction::Faction::EdenCom
+                fitting_engine::faction::Faction::EdenCom
             },
         };
         tok.to_tokens(tokens);

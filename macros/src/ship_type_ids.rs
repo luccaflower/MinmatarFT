@@ -1,8 +1,8 @@
-use domain::ship_type::battlecruiser::BattlecruiserType;
-use domain::ship_type::battleship::BattleshipType;
-use domain::ship_type::cruiser::CruiserType;
-use domain::ship_type::frigate::FrigateType;
-use domain::ship_type::ShipType;
+use fitting_engine::ship_type::battlecruiser::BattlecruiserType;
+use fitting_engine::ship_type::battleship::BattleshipType;
+use fitting_engine::ship_type::cruiser::CruiserType;
+use fitting_engine::ship_type::frigate::FrigateType;
+use fitting_engine::ship_type::ShipType;
 
 pub fn ship_type_by_id(id: u64) -> ShipType {
     match id {
