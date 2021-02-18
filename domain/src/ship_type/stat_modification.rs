@@ -60,6 +60,7 @@ where
 {
     Multiplicative(T),
     Additive(T),
+    FittingCost(T),
 }
 
 impl<T> ModificationType<T>
@@ -70,6 +71,7 @@ where
         match self {
             Self::Additive(_) => true,
             Self::Multiplicative(_) => false,
+            Self::FittingCost(_) => false
         }
     }
 
@@ -77,6 +79,15 @@ where
         match self {
             Self::Additive(_) => false,
             Self::Multiplicative(_) => true,
+            Self::FittingCost(_) => false,
+        }
+    }
+
+    pub fn fitting_cost(&self) -> bool {
+        match self {
+            Self::Multiplicative(_) => false,
+            Self::Additive(_) => false,
+            Self::FittingCost(_) => true,
         }
     }
 
@@ -87,6 +98,7 @@ where
         match self {
             ModificationType::Multiplicative(x) => val * x.clone(),
             ModificationType::Additive(x) => val + x.clone(),
+            ModificationType::FittingCost(x) => val + x.clone(),
         }
     }
 }
@@ -131,7 +143,11 @@ where
             if self.additive() {
                 Ordering::Greater
             } else {
-                Ordering::Less
+                if self.multiplicative() {
+                    Ordering::Greater
+                } else {
+                    Ordering::Less
+                }
             }
         }
     }
@@ -147,6 +163,7 @@ where
         match self {
             ModificationType::Multiplicative(x) => x,
             ModificationType::Additive(x) => x,
+            ModificationType::FittingCost(x) => x,
         }
     }
 }
