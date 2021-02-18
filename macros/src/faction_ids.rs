@@ -16,6 +16,8 @@ pub fn faction_by_id(id: u64) -> Faction {
         500020 => Faction::Serpentis,
         500026 => Faction::Triglavians,
         500027 => Faction::EdenCom,
+        500006 => Faction::Concord,
+        500014 => Faction::ORE,
         _a => panic!("{} isnt a faction id", _a),
     }
 }

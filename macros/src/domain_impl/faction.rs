@@ -56,6 +56,12 @@ impl ToTokens for FactionWrapper {
             Faction::EdenCom => quote::quote! {
                 fitting_engine::faction::Faction::EdenCom
             },
+            Faction::Concord => quote::quote! {
+                fitting_engine::faction::Faction::Concord
+            },
+            Faction::ORE => quote::quote! {
+                fitting_engine::faction::Faction::ORE
+            },
         };
         tok.to_tokens(tokens);
     }

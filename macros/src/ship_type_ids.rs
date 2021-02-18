@@ -4,28 +4,28 @@ use fitting_engine::ship_type::cruiser::CruiserType;
 use fitting_engine::ship_type::frigate::FrigateType;
 use fitting_engine::ship_type::ShipType;
 
-pub fn ship_type_by_id(id: u64) -> ShipType {
+pub fn ship_type_by_id(id: u64) -> Option<ShipType> {
     match id {
-        25 => ShipType::Frigate(FrigateType::T1),
-        831 => ShipType::Frigate(FrigateType::Interceptor),
-        324 => ShipType::Frigate(FrigateType::Assault),
-        1527 => ShipType::Frigate(FrigateType::Logistics),
+        25 => Some(ShipType::Frigate(FrigateType::T1)),
+        831 => Some(ShipType::Frigate(FrigateType::Interceptor)),
+        324 => Some(ShipType::Frigate(FrigateType::Assault)),
+        1527 => Some(ShipType::Frigate(FrigateType::Logistics)),
 
-        26 => ShipType::Cruiser(CruiserType::T1),
-        358 => ShipType::Cruiser(CruiserType::HeavyAssault),
-        894 => ShipType::Cruiser(CruiserType::HeavyInterdictor),
-        832 => ShipType::Cruiser(CruiserType::Logistics),
-        963 => ShipType::Cruiser(CruiserType::Strategic),
-        833 => ShipType::Cruiser(CruiserType::ForceRecon),
-        906 => ShipType::Cruiser(CruiserType::CombatRecon),
+        26 => Some(ShipType::Cruiser(CruiserType::T1)),
+        358 => Some(ShipType::Cruiser(CruiserType::HeavyAssault)),
+        894 => Some(ShipType::Cruiser(CruiserType::HeavyInterdictor)),
+        832 => Some(ShipType::Cruiser(CruiserType::Logistics)),
+        963 => Some(ShipType::Cruiser(CruiserType::Strategic)),
+        833 => Some(ShipType::Cruiser(CruiserType::ForceRecon)),
+        906 => Some(ShipType::Cruiser(CruiserType::CombatRecon)),
 
-        27 => ShipType::Battleship(BattleshipType::T1),
-        900 => ShipType::Battleship(BattleshipType::Marauder),
+        27 => Some(ShipType::Battleship(BattleshipType::T1)),
+        900 => Some(ShipType::Battleship(BattleshipType::Marauder)),
 
-        419 => ShipType::Battlecruiser(BattlecruiserType::T1),
-        1201 => ShipType::Battlecruiser(BattlecruiserType::T1),
-        540 => ShipType::Battlecruiser(BattlecruiserType::Command),
+        419 => Some(ShipType::Battlecruiser(BattlecruiserType::T1)),
+        1201 => Some(ShipType::Battlecruiser(BattlecruiserType::T1)),
+        540 => Some(ShipType::Battlecruiser(BattlecruiserType::Command)),
 
-        _ => panic!("{} inst a ship type id"),
+        _ => None,
     }
 }

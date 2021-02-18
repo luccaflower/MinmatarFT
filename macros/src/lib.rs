@@ -15,8 +15,6 @@ use crate::ship_type_ids::ship_type_by_id;
 use fitting_engine::faction::Faction;
 use fitting_engine::ship::Ship;
 use fitting_engine::ship_stats::ShipStats;
-use fitting_engine::ship_type::cruiser::CruiserType;
-use fitting_engine::ship_type::ShipType;
 use proc_macro::TokenStream;
 use std::collections::HashMap;
 use std::env::current_dir;
@@ -106,39 +104,93 @@ pub fn generate_all_data(_: TokenStream) -> TokenStream {
         })
         .filter(|x| x.is_some())
         .map(|x| x.unwrap())
-        .partition(|(_, _, c, _)| c.name.en.as_ref().unwrap() == "Ship");
-    ships.into_iter().map(|(t, g, c, v)| {
-        let (low_slots, _) = v
-            .iter()
-            .find(|(_, x)| x.name.as_str() == "lowSlots")
-            .unwrap();
-        let (med_slots, _) = v
-            .iter()
-            .find(|(_, x)| x.name.as_str() == "medSlots")
-            .unwrap();
-        let (high_slots, _) = v
-            .iter()
-            .find(|(_, x)| x.name.as_str() == "hiSlots")
-            .unwrap();
-        let name = t.name.en.unwrap();
-        let faction = faction_by_id(t.faction_id.unwrap());
-        let ship_type = ship_type_by_id(t.group_id);
-    });
+        .partition(|(_, _, c, _)| c.name.en.as_ref() == Some(&"Ship".to_string()));
+    //panic!("{:?}", ships.iter().filter(|(x,_,_,_)|x.faction_id.is_none()).map(|(x,_,_,_)|x.name.en.clone()).collect::<Vec<Option<String>>>());
+    let ships = ships
+        .into_iter()
+        .map(|(t, g, c, v)| {
+            let ship_type = ship_type_by_id(t.group_id.clone());
+            (t, g, c, v, ship_type)
+        })
+        .filter(|(_, _, _, _, ship_type)| ship_type.is_some())
+        .map(|(t, g, c, v, ship_type)| (t, g, c, v, ship_type.unwrap()))
+        .map(|(t, g, c, v, ship_type)| {
+            let (low_slots, _) = v
+                .iter()
+                .find(|(_, x)| x.name.as_str() == "lowSlots")
+                .expect("1");
+            let (med_slots, _) = v
+                .iter()
+                .find(|(_, x)| x.name.as_str() == "medSlots")
+                .expect("2");
+            let (high_slots, _) = v
+                .iter()
+                .find(|(_, x)| x.name.as_str() == "hiSlots")
+                .expect("3");
+            let (shield_hp, _) = v
+                .iter()
+                .find(|(_, x)| x.name.as_str() == "shieldCapacity")
+                .expect("4");
+            let (armor_hp, _) = v
+                .iter()
+                .find(|(_, x)| x.name.as_str() == "armorHP")
+                .expect("5");
+            let (hull_hp, _) = v.iter().find(|(_, x)| x.name.as_str() == "hp").expect("6");
+            let (velocity, _) = v
+                .iter()
+                .find(|(_, x)| x.name.as_str() == "maxVelocity")
+                .expect("7");
+            let (agility, _) = v
+                .iter()
+                .find(|(_, x)| x.name.as_str() == "agility")
+                .expect("7");
+            let mass = &t.mass.expect("8");
+            let (power_grid, _) = v
+                .iter()
+                .find(|(_, x)| x.name.as_str() == "powerOutput")
+                .expect("9");
+            let (cpu, _) = v
+                .iter()
+                .find(|(_, x)| x.name.as_str() == "cpuOutput")
+                .expect("10");
 
-    let a = SliceWrapper::new(
-        vec![ShipWrapper::new(Ship::new(
-            "hello",
-            ShipType::Cruiser(CruiserType::T1),
-            Faction::Amarr,
-            4,
-            5,
-            5,
-            ShipStats::new(1, 1, 1, 1, 1, 1, 1, 1),
-        ))]
-        .into_boxed_slice(),
-    );
+            let name = t.name.en.expect("11");
+            let faction = match t.faction_id {
+                None => match name.as_str() {
+                    "Whiptail" | "Chameleon" => Faction::Guristas,
+                    "Pacifier" | "Marshal" | "Enforcer" => Faction::Concord,
+                    "Stratios Emergency Responder" => Faction::SistersOfEve,
+                    _ => panic!("couldnt determine faction for ship {} ", name),
+                },
+                Some(x) => faction_by_id(x),
+            };
+            Ship::new(
+                name,
+                ship_type,
+                faction,
+                high_slots.clone() as u8,
+                med_slots.clone() as u8,
+                low_slots.clone() as u8,
+                ShipStats::new(
+                    shield_hp.clone() as usize,
+                    armor_hp.clone() as usize,
+                    hull_hp.clone() as usize,
+                    velocity.clone() as usize,
+                    agility.clone() as usize,
+                    mass.clone() as usize,
+                    power_grid.clone() as usize,
+                    cpu.clone() as usize,
+                ),
+            )
+        })
+        .map(ShipWrapper::new)
+        .collect::<Vec<ShipWrapper>>()
+        .into_boxed_slice();
+    let length = ships.len();
+    let a = SliceWrapper::new(ships);
+
     TokenStream::from(quote::quote! {
-        static ALL_SHIPS: [fitting_engine::ship::Ship; 1] = #a;
+        static ALL_SHIPS: [fitting_engine::ship::Ship; #length] = #a;
     })
 }
 

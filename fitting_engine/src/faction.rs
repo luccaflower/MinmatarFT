@@ -14,4 +14,6 @@ pub enum Faction {
     SistersOfEve,
     SocietyofConsciousThought,
     EdenCom,
+    Concord,
+    ORE,
 }

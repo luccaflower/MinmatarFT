@@ -1,6 +1,5 @@
 use proc_macro2::TokenStream;
-use proc_macro2::TokenTree::{Literal, Punct};
-use quote::{ToTokens, TokenStreamExt};
+use quote::ToTokens;
 use std::str::FromStr;
 
 #[derive(Debug, Clone)]
