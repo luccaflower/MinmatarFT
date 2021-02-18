@@ -11,4 +11,4 @@ fitting_engine = {path= "fitting_engine" }
 static_data = {path="static_data"}
 
 [workspace]
-members = ["fitting_engine", "macros", "static_data", "sde_parser"]
+members = ["fitting_engine", "macros", "static_data", "sde_parser", "sde_provider"]
