@@ -101,7 +101,9 @@ where
     }
 }
 
-pub fn parse<'a, T: Into<InputSdeData>>(input: T) -> Result<OutputSdeData<'a>, Box<dyn std::error::Error>> {
+pub fn parse<'a, T: Into<InputSdeData>>(
+    input: T,
+) -> Result<OutputSdeData<'a>, Box<dyn std::error::Error>> {
     let (type_ids, group_ids, category_ids, dogma_attributes, type_dogmas) = input.into();
     let (ships, _rest_data): (
         Vec<(

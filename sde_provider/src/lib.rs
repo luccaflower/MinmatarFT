@@ -1,10 +1,10 @@
+use sde_parser::{InputSdeData, ParserArgument};
 use std::borrow::Cow;
-use sde_parser::{ParserArgument, InputSdeData};
-use std::ops::Deref;
-use std::fs::{File, create_dir_all};
-use std::io::{Cursor, Write, Read};
-use std::path::Path;
 use std::env::current_dir;
+use std::fs::{create_dir_all, File};
+use std::io::{Cursor, Read, Write};
+use std::ops::Deref;
+use std::path::Path;
 use std::{fs, io};
 use zip::read::ZipFile;
 
@@ -17,7 +17,9 @@ impl<'a> SdeProvider<'a> {
     pub fn new() -> Self {
         Self {
             cached_dir_name: None,
-            url: Cow::Borrowed("https://eve-static-data-export.s3-eu-west-1.amazonaws.com/tranquility/sde.zip"),
+            url: Cow::Borrowed(
+                "https://eve-static-data-export.s3-eu-west-1.amazonaws.com/tranquility/sde.zip",
+            ),
         }
     }
 
@@ -34,7 +36,13 @@ impl<'a> SdeProvider<'a> {
 
 impl SdeProvider<'_> {
     async fn fetch(&self) -> Vec<u8> {
-        reqwest::get(self.url.deref()).await.unwrap().bytes().await.unwrap().to_vec()
+        reqwest::get(self.url.deref())
+            .await
+            .unwrap()
+            .bytes()
+            .await
+            .unwrap()
+            .to_vec()
     }
     pub async fn execute(self) -> InputSdeData {
         match &self.cached_dir_name {
@@ -53,7 +61,14 @@ impl SdeProvider<'_> {
                 let category_ids = into(zip.by_name("sde/fsd/categoryIDs.yaml").unwrap());
                 let dogma_attributes = into(zip.by_name("sde/fsd/dogmaAttributes.yaml").unwrap());
                 let type_dogma = into(zip.by_name("sde/fsd/typeDogma.yaml").unwrap());
-                ParserArgument::new(type_ids, group_ids, category_ids, dogma_attributes, type_dogma).into()
+                ParserArgument::new(
+                    type_ids,
+                    group_ids,
+                    category_ids,
+                    dogma_attributes,
+                    type_dogma,
+                )
+                .into()
             }
             Some(dir_name) => {
                 let dir = Path::new(dir_name.deref());
@@ -93,42 +108,13 @@ impl SdeProvider<'_> {
                     }
                 }
                 ParserArgument::new(
-                    File::open(
-                        dir
-                            .join("sde")
-                            .join("fsd")
-                            .join("typeIDs.yaml"),
-                    )
-                        .unwrap(),
-                    File::open(
-                        dir
-                            .join("sde")
-                            .join("fsd")
-                            .join("groupIDs.yaml"),
-                    )
-                        .unwrap(),
-                    File::open(
-                        dir
-                            .join("sde")
-                            .join("fsd")
-                            .join("categoryIDs.yaml"),
-                    )
-                        .unwrap(),
-                    File::open(
-                        dir
-                            .join("sde")
-                            .join("fsd")
-                            .join("dogmaAttributes.yaml"),
-                    )
-                        .unwrap(),
-                    File::open(
-                        dir
-                            .join("sde")
-                            .join("fsd")
-                            .join("typeDogma.yaml"),
-                    )
-                        .unwrap(),
-                ).into()
+                    File::open(dir.join("sde").join("fsd").join("typeIDs.yaml")).unwrap(),
+                    File::open(dir.join("sde").join("fsd").join("groupIDs.yaml")).unwrap(),
+                    File::open(dir.join("sde").join("fsd").join("categoryIDs.yaml")).unwrap(),
+                    File::open(dir.join("sde").join("fsd").join("dogmaAttributes.yaml")).unwrap(),
+                    File::open(dir.join("sde").join("fsd").join("typeDogma.yaml")).unwrap(),
+                )
+                .into()
             }
         }
     }
