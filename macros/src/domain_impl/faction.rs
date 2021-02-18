@@ -50,6 +50,12 @@ impl ToTokens for FactionWrapper {
             Faction::SistersOfEve => quote::quote! {
                 domain::faction::Faction::SistersOfEve
             },
+            Faction::SocietyofConsciousThought => quote::quote! {
+                domain::faction::Faction::SocietyofConsciousThought
+            },
+            Faction::EdenCom => quote::quote! {
+                domain::faction::Faction::EdenCom
+            },
         };
         tok.to_tokens(tokens);
     }

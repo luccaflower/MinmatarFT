@@ -29,6 +29,12 @@ impl ToTokens for ShipTypeWrapper {
                 FrigateType::Assault => quote::quote! {
                     domain::ship_type::ShipType::Frigate(domain::ship_type::frigate::FrigateType::Assault)
                 },
+                FrigateType::ElectronicAttack => quote::quote! {
+                    domain::ship_type::ShipType::Frigate(domain::ship_type::frigate::FrigateType::ElectronicAttack)
+                },
+                FrigateType::Logistics => quote::quote! {
+                    domain::ship_type::ShipType::Frigate(domain::ship_type::frigate::FrigateType::Logistics)
+                },
             },
             ShipType::Destroyer(x) => match x {
                 DestroyerType::T1 => quote::quote! {
@@ -59,6 +65,12 @@ impl ToTokens for ShipTypeWrapper {
                 },
                 CruiserType::Strategic => quote::quote! {
                     domain::ship_type::ShipType::Cruiser(domain::ship_type::cruiser::CruiserType::Strategic)
+                },
+                CruiserType::ForceRecon => quote::quote! {
+                    domain::ship_type::ShipType::Cruiser(domain::ship_type::cruiser::CruiserType::ForceRecon)
+                },
+                CruiserType::CombatRecon => quote::quote! {
+                    domain::ship_type::ShipType::Cruiser(domain::ship_type::cruiser::CruiserType::CombatRecon)
                 },
             },
             ShipType::Battlecruiser(x) => match x {

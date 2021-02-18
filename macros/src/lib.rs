@@ -1,13 +1,17 @@
 mod domain_impl;
+mod faction_ids;
 mod model;
+mod ship_type_ids;
 
 use crate::domain_impl::ship::ShipWrapper;
 use crate::domain_impl::slice::SliceWrapper;
+use crate::faction_ids::faction_by_id;
 use crate::model::category_id::CategoryId;
 use crate::model::dogma_attribute::DogmaAttribute;
 use crate::model::group_id::GroupId;
 use crate::model::type_dogma::TypeDogma;
 use crate::model::type_id::TypeId;
+use crate::ship_type_ids::ship_type_by_id;
 use domain::faction::Faction;
 use domain::ship::Ship;
 use domain::ship_stats::ShipStats;
@@ -76,13 +80,15 @@ async fn download_static_data() {
 pub fn generate_all_data(_: TokenStream) -> TokenStream {
     let runtime = Runtime::new().unwrap();
     runtime.block_on(download_static_data());
-    /*
     let type_ids = parse_type_ids();
     let group_ids = parse_group_ids();
     let category_ids = parse_category_ids();
     let type_dogmas = parse_type_dogma();
     let dogma_attributes = parse_dogma_attributes();
-    let ships = type_ids
+    let (ships, rest_data): (
+        Vec<(TypeId, &GroupId, &CategoryId, Vec<(f64, &DogmaAttribute)>)>,
+        Vec<(TypeId, &GroupId, &CategoryId, Vec<(f64, &DogmaAttribute)>)>,
+    ) = type_ids
         .into_iter()
         .map(|(i, x)| {
             let group = group_ids.get(&x.group_id)?;
@@ -100,8 +106,25 @@ pub fn generate_all_data(_: TokenStream) -> TokenStream {
         })
         .filter(|x| x.is_some())
         .map(|x| x.unwrap())
-        .collect::<Vec<(TypeId, &GroupId, &CategoryId, Vec<(f64, &DogmaAttribute)>)>>();
-    */
+        .partition(|(_, _, c, _)| c.name.en.as_ref().unwrap() == "Ship");
+    ships.into_iter().map(|(t, g, c, v)| {
+        let (low_slots, _) = v
+            .iter()
+            .find(|(_, x)| x.name.as_str() == "lowSlots")
+            .unwrap();
+        let (med_slots, _) = v
+            .iter()
+            .find(|(_, x)| x.name.as_str() == "medSlots")
+            .unwrap();
+        let (high_slots, _) = v
+            .iter()
+            .find(|(_, x)| x.name.as_str() == "hiSlots")
+            .unwrap();
+        let name = t.name.en.unwrap();
+        let faction = faction_by_id(t.faction_id.unwrap());
+        let ship_type = ship_type_by_id(t.group_id);
+    });
+
     let a = SliceWrapper::new(
         vec![ShipWrapper::new(Ship::new(
             "hello",

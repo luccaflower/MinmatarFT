@@ -12,4 +12,6 @@ pub enum Faction {
     Serpentis,
     Triglavians,
     SistersOfEve,
+    SocietyofConsciousThought,
+    EdenCom,
 }

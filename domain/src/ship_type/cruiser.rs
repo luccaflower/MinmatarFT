@@ -5,4 +5,6 @@ pub enum CruiserType {
     HeavyInterdictor,
     Logistics,
     Strategic,
+    ForceRecon,
+    CombatRecon,
 }
