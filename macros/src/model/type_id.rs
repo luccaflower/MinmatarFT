@@ -9,7 +9,9 @@ pub struct TypeId {
     #[serde(alias = "factionID")]
     pub faction_id: Option<u64>,
     #[serde(alias = "groupID")]
-    pub graphic_id: u64,
+    pub group_id: u64,
+    #[serde(alias = "graphicID")]
+    pub graphic_id: Option<u64>,
     #[serde(alias = "market_group_id")]
     pub market_group_id: Option<u64>,
     pub mass: Option<f64>,

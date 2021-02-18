@@ -1,12 +1,17 @@
 mod model;
+mod domain_impl;
 
 use crate::model::category_id::CategoryId;
 use crate::model::dogma_attribute::DogmaAttribute;
 use crate::model::group_id::GroupId;
 use crate::model::type_dogma::TypeDogma;
 use crate::model::type_id::TypeId;
+use domain::faction::Faction;
+use domain::ship::Ship;
+use domain::ship_stats::ShipStats;
+use domain::ship_type::cruiser::CruiserType;
+use domain::ship_type::ShipType;
 use proc_macro::TokenStream;
-use std::collections::hash_map::RandomState;
 use std::collections::HashMap;
 use std::env::current_dir;
 use std::fs::{create_dir, File};
@@ -15,6 +20,8 @@ use std::ops::Deref;
 use std::path::Path;
 use std::{fs, io};
 use tokio::runtime::Runtime;
+use crate::domain_impl::ship::ShipWrapper;
+use crate::domain_impl::slice::SliceWrapper;
 
 fn static_dir_path() -> &'static Path {
     Path::new("__static_data")
@@ -69,8 +76,44 @@ async fn download_static_data() {
 pub fn generate_all_data(_: TokenStream) -> TokenStream {
     let runtime = Runtime::new().unwrap();
     runtime.block_on(download_static_data());
-    let _ = parse_type_dogma();
-    "".parse().unwrap()
+    /*
+    let type_ids = parse_type_ids();
+    let group_ids = parse_group_ids();
+    let category_ids = parse_category_ids();
+    let type_dogmas = parse_type_dogma();
+    let dogma_attributes = parse_dogma_attributes();
+    let ships = type_ids
+        .into_iter()
+        .map(|(i, x)| {
+            let group = group_ids.get(&x.group_id)?;
+            let category = category_ids.get(&group.category_id)?;
+            let type_dogma = type_dogmas.get(&i)?;
+            let dogma_attributes = type_dogma
+                .dogma_attributes
+                .iter()
+                .map(|x| (x.value.clone(), dogma_attributes.get(&x.attribute_id)))
+                .filter(|(_, x)| x.is_some())
+                .map(|(a, b)| (a, b.unwrap()))
+                .collect::<Vec<(f64, &DogmaAttribute)>>();
+
+            Some((x, group, category, dogma_attributes))
+        })
+        .filter(|x| x.is_some())
+        .map(|x| x.unwrap())
+        .collect::<Vec<(TypeId, &GroupId, &CategoryId, Vec<(f64, &DogmaAttribute)>)>>();
+    */
+    let a = SliceWrapper::new(vec![ShipWrapper::new(Ship::new(
+        "hello",
+        ShipType::Cruiser(CruiserType::T1),
+        Faction::Amarr,
+        4,
+        5,
+        5,
+        ShipStats::new(1, 1, 1, 1, 1, 1, 1, 1),
+    ))].into_boxed_slice());
+    TokenStream::from(quote::quote! {
+        static ALL_SHIPS: [domain::ship::Ship; 1] = #a;
+    })
 }
 
 fn parse_type_ids() -> HashMap<u64, TypeId> {

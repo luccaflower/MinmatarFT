@@ -401,6 +401,7 @@ version = "0.1.0"
 dependencies = [
  "domain",
  "proc-macro-hack",
+ "proc-macro2",
  "quote",
  "reqwest",
  "serde",

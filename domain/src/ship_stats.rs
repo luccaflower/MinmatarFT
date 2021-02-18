@@ -3,14 +3,14 @@ use num_traits::{NumOps, Zero};
 
 #[derive(Debug, Clone)]
 pub struct ShipStats {
-    shield_hp: usize,
-    armor_hp: usize,
-    hull_hp: usize,
-    velocity: usize,
-    agility: usize,
-    mass: usize,
-    power_grid: usize,
-    cpu: usize,
+    pub shield_hp: usize,
+    pub armor_hp: usize,
+    pub hull_hp: usize,
+    pub velocity: usize,
+    pub agility: usize,
+    pub mass: usize,
+    pub power_grid: usize,
+    pub cpu: usize,
 }
 
 impl ShipStats {
