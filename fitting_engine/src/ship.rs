@@ -20,6 +20,7 @@ pub struct Ship<'a> {
     pub launcher_hard_points: u8,
     pub rig_slots: u8,
     pub rig_size: RigSize,
+    pub sensor_strength_type: SensorStrengthType,
 
     pub fitting_stats: Fitting,
     pub defensive_stats: Defense,
@@ -41,6 +42,7 @@ impl Ship<'_> {
         launcher_hard_points: u8,
         rig_slots: u8,
         rig_size: RigSize,
+        sensor_strength_type: SensorStrengthType,
         fitting_stats: Fitting,
         defensive_stats: Defense,
         movement_stats: Movement,
@@ -59,6 +61,7 @@ impl Ship<'_> {
             launcher_hard_points,
             rig_slots,
             rig_size,
+            sensor_strength_type,
             fitting_stats,
             defensive_stats,
             movement_stats,
@@ -75,4 +78,12 @@ pub enum RigSize {
     Medium,
     Large,
     Capital,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum SensorStrengthType {
+    Ladar,
+    Radar,
+    Magnetometric,
+    Gravimetric,
 }

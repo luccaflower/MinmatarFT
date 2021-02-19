@@ -38,7 +38,12 @@ fn impl_stat_macro(ast: &syn::DeriveInput) -> TokenStream {
         .unwrap();
     let mod_fields = types
         .iter()
-        .map(|(name, tt)| format!("{}: crate::ship_type::stat_modification::ModificationType<{}>,", name, tt))
+        .map(|(name, tt)| {
+            format!(
+                "{}: crate::ship_type::stat_modification::ModificationType<{}>,",
+                name, tt
+            )
+        })
         .collect::<String>()
         .parse::<proc_macro2::TokenStream>()
         .unwrap();

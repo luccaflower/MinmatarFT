@@ -14,35 +14,35 @@ fn main() {
                 .join("fsd")
                 .join("typeIDs.yaml"),
         )
-            .unwrap(),
+        .unwrap(),
         File::open(
             static_dir_path()
                 .join("sde")
                 .join("fsd")
                 .join("groupIDs.yaml"),
         )
-            .unwrap(),
+        .unwrap(),
         File::open(
             static_dir_path()
                 .join("sde")
                 .join("fsd")
                 .join("categoryIDs.yaml"),
         )
-            .unwrap(),
+        .unwrap(),
         File::open(
             static_dir_path()
                 .join("sde")
                 .join("fsd")
                 .join("dogmaAttributes.yaml"),
         )
-            .unwrap(),
+        .unwrap(),
         File::open(
             static_dir_path()
                 .join("sde")
                 .join("fsd")
                 .join("typeDogma.yaml"),
         )
-            .unwrap(),
+        .unwrap(),
     );
     sde_parser::parse(args).unwrap();
 }

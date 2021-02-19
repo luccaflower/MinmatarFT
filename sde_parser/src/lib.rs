@@ -154,7 +154,7 @@ pub fn parse<'a, T: Into<InputSdeData>>(
         .map(|(t, g, c, v, ship_type)| (t, g, c, v, ship_type.unwrap()))
         .map(|(t, g, c, v, ship_type)| {
             for a in &v {
-                attributes.insert(a.0.clone(), a.1.1.clone());
+                attributes.insert(a.0.clone(), a.1 .1.clone());
             }
             let (low_slots, _) = v.get(&12).unwrap();
             let (med_slots, _) = v.get(&13).unwrap();
