@@ -38,7 +38,7 @@ fn impl_stat_macro(ast: &syn::DeriveInput) -> TokenStream {
         .unwrap();
     let mod_fields = types
         .iter()
-        .map(|(name, tt)| format!("{}: ModificationType<{}>,", name, tt))
+        .map(|(name, tt)| format!("{}: crate::ship_type::stat_modification::ModificationType<{}>,", name, tt))
         .collect::<String>()
         .parse::<proc_macro2::TokenStream>()
         .unwrap();
@@ -102,11 +102,11 @@ fn impl_stat_macro(ast: &syn::DeriveInput) -> TokenStream {
         impl Stat for #name {
             type Input = #mod_name;
             fn apply(&self, stat_mods: Vec<&Self::Input>) -> Self {
-                fn calculate<T>(base_val: T, mut additions: Vec<&ModificationType<T>>) -> T
+                fn calculate<T>(base_val: T, mut additions: Vec<&crate::ship_type::stat_modification::ModificationType<T>>) -> T
                 where
-                    T: NumOps + Eq + Ord + Clone + Zero,
+                    T: num_traits::NumOps + PartialEq + PartialOrd + Clone + num_traits::Zero,
                 {
-                    additions.sort();
+                    additions.sort_by(|a,b|a.partial_cmp(b).unwrap());
                     additions.into_iter().fold(base_val, |acc, x| x.apply(acc))
                 }
                 let mut r = self.clone();

@@ -1,7 +1,9 @@
 use crate::faction::Faction;
-use crate::ship_stats::ShipStats;
 use crate::ship_type::ShipType;
-use crate::stats::{capacitor::Capacitor, defense::Defense, drone::Drone, fitting::Fitting, movement::Movement, sensor::Sensor};
+use crate::stats::{
+    capacitor::Capacitor, defense::Defense, drone::Drone, fitting::Fitting, movement::Movement,
+    sensor::Sensor,
+};
 use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
 
@@ -40,7 +42,7 @@ impl Ship<'_> {
         rig_slots: u8,
         rig_size: RigSize,
         fitting_stats: Fitting,
-        defensive_stats: Defensive,
+        defensive_stats: Defense,
         movement_stats: Movement,
         sensor_stats: Sensor,
         drone_stats: Drone,
@@ -62,12 +64,12 @@ impl Ship<'_> {
             movement_stats,
             sensor_stats,
             drone_stats,
-            capacitor_stats
+            capacitor_stats,
         }
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum RigSize {
     Small,
     Medium,

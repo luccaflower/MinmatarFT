@@ -114,7 +114,7 @@ where
 
 impl<T> PartialEq for &ModificationType<T>
 where
-    T: NumOps + Eq + Ord,
+    T: NumOps + PartialEq + PartialOrd,
 {
     fn eq(&self, other: &Self) -> bool {
         self.additive() == other.additive() && self.deref().eq(other)
@@ -123,40 +123,17 @@ where
 
 impl<T> PartialOrd for &ModificationType<T>
 where
-    T: NumOps + Eq + Ord,
+    T: NumOps + PartialEq + PartialOrd,
 {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(self.cmp(other))
-    }
-}
-
-impl<T> Eq for &ModificationType<T> where T: NumOps + Eq + Ord {}
-
-impl<T> Ord for &ModificationType<T>
-where
-    T: NumOps + Eq + Ord,
-{
-    fn cmp(&self, other: &Self) -> Ordering {
-        if self.additive() == other.additive() {
-            let v: &T = self.deref();
-            v.cmp(other.deref())
-        } else {
-            if self.additive() {
-                Ordering::Greater
-            } else {
-                if self.multiplicative() {
-                    Ordering::Greater
-                } else {
-                    Ordering::Less
-                }
-            }
-        }
+        let s: &T = self.deref();
+        s.partial_cmp(other.deref())
     }
 }
 
 impl<T> Deref for ModificationType<T>
 where
-    T: NumOps + Eq + Ord,
+    T: NumOps + PartialEq + PartialOrd,
 {
     type Target = T;
 
