@@ -7,5 +7,5 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-macros = { path = "../macros" }
+static_data_macros = { path = "../static_data_macros" }
 fitting_engine = { path = "../fitting_engine" }
