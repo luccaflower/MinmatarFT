@@ -455,7 +455,7 @@ name = "minmatar_ft"
 version = "0.1.0"
 dependencies = [
  "fitting_engine",
- "static_data",
+ "sde_parser",
 ]
 
 [[package]]

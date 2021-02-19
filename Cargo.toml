@@ -8,7 +8,7 @@ edition = "2018"
 
 [dependencies]
 fitting_engine = {path= "fitting_engine" }
-static_data = {path="static_data"}
+sde_parser = {path="sde_parser"}
 
 [workspace]
 members = ["fitting_engine", "macros", "static_data", "sde_parser", "sde_provider"]

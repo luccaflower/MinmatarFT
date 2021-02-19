@@ -8,7 +8,7 @@ use crate::ship_type_ids::ship_type_by_id;
 use fitting_engine::faction::Faction;
 use fitting_engine::ship::Ship;
 use fitting_engine::ship_stats::ShipStats;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::io;
 
 mod faction_ids;
@@ -143,6 +143,7 @@ pub fn parse<'a, T: Into<InputSdeData>>(
         .filter(|x| x.is_some())
         .map(|x| x.unwrap())
         .partition(|(_, _, c, _)| c.name.en.as_ref() == Some(&"Ship".to_string()));
+    let mut attributes = HashMap::new();
     let ship_map = ships
         .into_iter()
         .map(|(t, g, c, v)| {
@@ -152,6 +153,9 @@ pub fn parse<'a, T: Into<InputSdeData>>(
         .filter(|(_, _, _, _, ship_type)| ship_type.is_some())
         .map(|(t, g, c, v, ship_type)| (t, g, c, v, ship_type.unwrap()))
         .map(|(t, g, c, v, ship_type)| {
+            for a in &v {
+                attributes.insert(a.0.clone(), a.1.1.clone());
+            }
             let (low_slots, _) = v.get(&12).unwrap();
             let (med_slots, _) = v.get(&13).unwrap();
             let (high_slots, _) = v.get(&14).unwrap();
@@ -196,6 +200,6 @@ pub fn parse<'a, T: Into<InputSdeData>>(
         })
         .map(|x| (x.name.to_string(), x))
         .collect();
-
+    println!("{:?}", attributes);
     Ok(ship_map)
 }

@@ -129,7 +129,7 @@ mod tests {
     }
 
     #[test]
-    fn applies_multiple_additive_single_mod() {
+    fn applies_multiple_additive_stats_from_single_mod() {
         let mut stat_mods = StatModification::default();
         stat_mods.hull_hp = Additive(500);
         stat_mods.mass = Additive(1000);
@@ -139,7 +139,7 @@ mod tests {
     }
 
     #[test]
-    fn applies_additive_multiple_mods() {
+    fn applies_additive_stats_from_multiple_mods() {
         let mut stat_mods1 = StatModification::default();
         let mut stat_mods2 = StatModification::default();
         stat_mods1.velocity = Additive(20);
