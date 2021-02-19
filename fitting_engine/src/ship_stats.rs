@@ -1,8 +1,14 @@
 use crate::ship_type::stat_modification::{ModificationType, StatModification};
+use fitting_engine_macros::*;
 use num_traits::{NumOps, Zero};
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+pub trait Stat {
+    type Input;
+    fn apply(&self, stat_mods: Vec<&Self::Input>) -> Self;
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Stat)]
 pub struct ShipStats {
     pub shield_hp: usize,
     pub armor_hp: usize,

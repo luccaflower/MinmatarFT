@@ -1,5 +1,5 @@
 use fitting_engine::ship::Ship;
-use macros::generate_all_data;
+use static_data_macros::generate_all_data;
 use std::borrow::Cow;
 
 generate_all_data!();
