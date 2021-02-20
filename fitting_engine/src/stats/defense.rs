@@ -2,7 +2,7 @@ use crate::stats::Stat;
 use fitting_engine_macros::*;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Serialize, Deserialize, Stat)]
+#[derive(Debug, Clone, Serialize, Deserialize, Stat, Eq, PartialEq)]
 pub struct Defense {
     pub hull_hp: u32,
     pub hull_em_resists: f32,

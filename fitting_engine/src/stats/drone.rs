@@ -2,7 +2,7 @@ use crate::stats::Stat;
 use fitting_engine_macros::*;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Serialize, Deserialize, Stat)]
+#[derive(Debug, Clone, Serialize, Deserialize, Stat, Eq, PartialEq)]
 pub struct Drone {
     pub control_range: f32,
     pub capacity: u16,
