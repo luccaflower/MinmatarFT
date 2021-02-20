@@ -177,11 +177,11 @@ mod tests {
         }
     }
     mod stat_modifications_are_applied {
+        use crate::stats::fitting::*;
         use crate::stats::sensor::*;
-        use crate::stats::tests::{SENSOR_STATS, FITTING_STATS};
+        use crate::stats::tests::{FITTING_STATS, SENSOR_STATS};
         use crate::stats::ModificationType;
         use crate::stats::Stat;
-        use crate::stats::fitting::*;
 
         #[test]
         fn additive_before_multiplicative() {
@@ -215,27 +215,19 @@ mod tests {
                 ModificationType::Multiplicative(1.2),
                 ModificationType::default(),
                 ModificationType::default(),
-                ModificationType::default()
+                ModificationType::default(),
             );
             let mod_fitting = FittingModifications::new(
                 ModificationType::FittingCost(100.0),
                 ModificationType::default(),
                 ModificationType::default(),
-                ModificationType::default()
+                ModificationType::default(),
             );
-            let expected = Fitting::new(
-                200.0,
-                250.0,
-                400,
-                375.0
-            );
+            let expected = Fitting::new(200.0, 250.0, 400, 375.0);
             let actual = FITTING_STATS.apply(vec![&mod_fitting, &mod_multi]);
             println!(
                 "cpu {}, pg: {}, calibration: {}, cargo: {}",
-                actual.cpu,
-                actual.pg,
-                actual.calibration,
-                actual.cargo
+                actual.cpu, actual.pg, actual.calibration, actual.cargo
             );
             assert_partial_eq!(expected, actual);
         }
