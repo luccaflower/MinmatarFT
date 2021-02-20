@@ -1,4 +1,4 @@
-use num_traits::{NumOps, Zero};
+use num_traits::{NumOps, Zero, AsPrimitive};
 use std::ops::Deref;
 use std::cmp::Ordering;
 use serde::{Deserialize, Serialize};
@@ -53,15 +53,18 @@ impl<T> ModificationType<T>
         }
     }
 
-    pub fn apply(&self, val: T) -> T
+    pub fn apply<'a, V: AsPrimitive<T>>(&self, val: V) -> V
         where
+            T: Copy,
             T: Clone,
+            T: 'a,
+            T: AsPrimitive<V>
     {
         match self {
-            ModificationType::Multiplicative(x) => val * x.clone(),
-            ModificationType::Additive(x) => val + x.clone(),
-            ModificationType::FittingCost(x) => val + x.clone(),
-        }
+            ModificationType::Multiplicative(x) => val.as_().mul(*self.deref()),
+            ModificationType::Additive(x) => val.as_().add(*self.deref()),
+            ModificationType::FittingCost(x) => val.as_().add(*self.deref()),
+        }.as_()
     }
 }
 impl<T> ModificationType<T>
@@ -137,7 +140,7 @@ mod tests {
 
         #[test]
         fn multiplicative() {
-            let modification = SennsorModifications::new(ModificationType::Multiplicative(1.2), )
+
         }
 
         #[test]

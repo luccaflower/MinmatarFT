@@ -134,9 +134,12 @@ fn impl_stat_macro(ast: &syn::DeriveInput) -> TokenStream {
         impl Stat for #name {
             type Input = #mod_name;
             fn apply(&self, stat_mods: Vec<&Self::Input>) -> Self {
-                fn calculate<T>(base_val: T, mut additions: Vec<&crate::stats::ModificationType<T>>) -> T
+                fn calculate<T, V>(base_val: T, mut additions: Vec<&crate::stats::ModificationType<V>>) -> T
                 where
+                    T: num_traits::cast::AsPrimitive<V>,
+                    V: num_traits::cast::AsPrimitive<T>,
                     T: num_traits::NumOps + PartialEq + PartialOrd + Clone + num_traits::Zero,
+                    V: num_traits::NumOps + PartialEq + PartialOrd + Clone + num_traits::Zero,
                 {
                     additions.sort_by(|a,b|a.partial_cmp(b).unwrap());
                     additions.into_iter().fold(base_val, |acc, x| x.apply(acc))
