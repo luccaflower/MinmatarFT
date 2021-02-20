@@ -39,8 +39,30 @@ fn impl_stat_macro(ast: &syn::DeriveInput) -> TokenStream {
         .iter()
         .map(|(name, tt)| {
             format!(
+                "pub {}: crate::stats::ModificationType<{}>,",
+                name, tt
+            )
+        })
+        .collect::<String>()
+        .parse::<proc_macro2::TokenStream>()
+        .unwrap();
+    let new_arg_list = types
+        .iter()
+        .map(|(name, tt)| {
+            format!(
                 "{}: crate::stats::ModificationType<{}>,",
                 name, tt
+            )
+        })
+        .collect::<String>()
+        .parse::<proc_macro2::TokenStream>()
+        .unwrap();
+    let self_arg_list = types
+        .iter()
+        .map(|(name, _)| {
+            format!(
+                "{},",
+                name
             )
         })
         .collect::<String>()
@@ -101,6 +123,12 @@ fn impl_stat_macro(ast: &syn::DeriveInput) -> TokenStream {
     let gen = quote! {
         pub struct #mod_name {
             #mod_fields
+        }
+
+        impl #mod_name {
+            pub fn new(#new_arg_list) -> Self {
+                Self {#self_arg_list}
+            }
         }
 
         impl Stat for #name {
