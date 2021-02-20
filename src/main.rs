@@ -6,8 +6,6 @@ fn static_dir_path() -> &'static Path {
     Path::new("__static_data")
 }
 
-fn idk<_0, _1, _2>() {}
-
 fn main() {
     let args = ParserArgument::new(
         File::open(

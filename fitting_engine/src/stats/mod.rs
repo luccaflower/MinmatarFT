@@ -1,4 +1,4 @@
-use num_traits::{AsPrimitive, NumOps, Zero};
+use num_traits::{AsPrimitive, NumOps};
 use serde::{Deserialize, Serialize};
 use std::cmp::Ordering;
 use std::ops::Deref;
@@ -67,12 +67,10 @@ where
         .as_()
     }
 }
-impl<T> ModificationType<T>
-where
-    T: NumOps + PartialEq + PartialOrd + Zero,
-{
-    pub fn default() -> Self {
-        Self::Additive(num_traits::identities::zero())
+
+impl Default for ModificationType<u8> {
+    fn default() -> Self {
+        Self::Additive(0u8)
     }
 }
 
@@ -131,10 +129,10 @@ mod tests {
         #[test]
         fn additive() {
             let modification = SensorModifications::new(
-                ModificationType::Additive(0.0),
+                ModificationType::default(),
                 ModificationType::Additive(50),
-                ModificationType::Additive(0.0),
-                ModificationType::Additive(0),
+                ModificationType::default(),
+                ModificationType::default(),
             );
             let expected = Sensor::new(50.0, 250, 32.0, 5);
             let actual = SENSOR_STATS.apply(vec![&modification]);
@@ -144,10 +142,10 @@ mod tests {
         #[test]
         fn multiplicative() {
             let modification = SensorModifications::new(
-                ModificationType::Additive(0),
+                ModificationType::default(),
                 ModificationType::Multiplicative(1.2),
-                ModificationType::Additive(0),
-                ModificationType::Additive(0)
+                ModificationType::default(),
+                ModificationType::default(),
             );
             let expected = Sensor::new(50.0, 240, 32.0, 5);
             let actual = SENSOR_STATS.apply(vec![&modification]);
