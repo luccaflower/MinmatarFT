@@ -132,7 +132,7 @@ mod tests {
 
         #[test]
         fn additive() {
-            let modification = SensorModifications::new(ModificationType::Additive(0.0), ModificationType::Additive(50), ModificationType::Additive(0.0), ModificationType::Additive(0));
+            let modification = SensorModifications::new(ModificationType::default(), ModificationType::Additive(50), ModificationType::default(), ModificationType::default());
             let expected = Sensor::new(50.0, 250, 32.0, 5);
             let actual = SENSOR_STATS.apply(vec![&modification]);
             assert_partial_eq!(expected, actual);
@@ -140,7 +140,10 @@ mod tests {
 
         #[test]
         fn multiplicative() {
-
+            let modification = SensorModifications::new(ModificationType::default(), ModificationType::Multiplicative(1.2), ModificationType::default(), ModificationType::default());
+            let expected = Sensor::new(50.0, 300, 32.0, 5);
+            let actual = SENSOR_STATS.apply(vec![&modification]);
+            assert_partial_eq!(expected, actual);
         }
 
         #[test]
