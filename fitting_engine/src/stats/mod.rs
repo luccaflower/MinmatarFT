@@ -106,3 +106,43 @@ impl<T> Deref for ModificationType<T>
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use once_cell::sync::Lazy;
+    use crate::stats::sensor::*;
+
+    macro_rules! assert_partial_eq {
+        ($expected:ident, $actual:ident) => {
+            assert!($expected.eq(&$actual))
+        }
+    }
+
+    pub static SENSOR_STATS: Lazy<Sensor> = Lazy::new(|| {
+        Sensor::new(50.0, 200, 32.0, 5)
+    });
+    mod stat_modifications_are {
+        use crate::stats::ModificationType;
+        use crate::stats::sensor::*;
+        use crate::stats::tests::SENSOR_STATS;
+        use crate::stats::Stat;
+
+        #[test]
+        fn additive() {
+            let modification = SensorModifications::new(ModificationType::Additive(0.0), ModificationType::Additive(50), ModificationType::Additive(0.0), ModificationType::Additive(0));
+            let expected = Sensor::new(50.0, 250, 32.0, 5);
+            let actual = SENSOR_STATS.apply(vec![&modification]);
+            assert_partial_eq!(expected, actual);
+        }
+
+        #[test]
+        fn multiplicative() {
+            let modification = SennsorModifications::new(ModificationType::Multiplicative(1.2), )
+        }
+
+        #[test]
+        fn additive_fitting_costs() {
+
+        }
+    }
+}

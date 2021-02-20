@@ -2,7 +2,7 @@ use crate::stats::Stat;
 use fitting_engine_macros::*;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Serialize, Deserialize, Stat, Eq, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, Stat, PartialEq)]
 pub struct Sensor {
     pub targeting_range: f32,
     pub scan_res: u16,

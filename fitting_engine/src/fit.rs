@@ -4,8 +4,6 @@ use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
 use std::collections::HashMap;
 use std::ops::Deref;
-use crate::stats::fitting::*;
-use crate::stats::{Stat, ModificationType};
 
 #[derive(Debug, Clone)]
 pub struct Fit<'a> {
