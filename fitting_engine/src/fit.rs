@@ -30,6 +30,15 @@ impl<'a> Fit<'a> {
         }
     }
 
+    pub fn compress(self) -> CompressedFit<'a> {
+        CompressedFit::new(
+            self.ship.name.deref(),
+            self.convert_slot(self.high_slots.deref()),
+            self.convert_slot(self.med_slots.deref()),
+            self.convert_slot(self.low_slots.deref()),
+        )
+    }
+
     fn convert_slot(&'a self, slots: &'a [Option<&'a Module>]) -> Vec<String> {
         slots
             .into_iter()
@@ -42,12 +51,7 @@ impl<'a> Fit<'a> {
 
 impl<'a> Into<CompressedFit<'a>> for Fit<'a> {
     fn into(self) -> CompressedFit<'a> {
-        CompressedFit::new(
-            self.ship.name.deref(),
-            self.convert_slot(self.high_slots.deref()),
-            self.convert_slot(self.med_slots.deref()),
-            self.convert_slot(self.low_slots.deref()),
-        )
+        self.compress()
     }
 }
 

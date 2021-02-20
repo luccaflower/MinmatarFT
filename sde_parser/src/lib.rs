@@ -13,7 +13,7 @@ use fitting_engine::stats::drone::Drone;
 use fitting_engine::stats::fitting::Fitting;
 use fitting_engine::stats::movement::Movement;
 use fitting_engine::stats::sensor::Sensor;
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 use std::io;
 
 mod faction_ids;
@@ -156,7 +156,7 @@ pub fn parse<'a, T: Into<InputSdeData>>(
         })
         .filter(|(_, _, _, _, ship_type)| ship_type.is_some())
         .map(|(t, g, c, v, ship_type)| (t, g, c, v, ship_type.unwrap()))
-        .map(|(t, g, c, v, ship_type)| {
+        .map(|(t, _g, _c, v, ship_type)| {
             let (low_slots, _) = v.get(&12).unwrap();
             let (med_slots, _) = v.get(&13).unwrap();
             let (high_slots, _) = v.get(&14).unwrap();
