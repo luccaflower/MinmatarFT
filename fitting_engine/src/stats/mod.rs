@@ -61,9 +61,9 @@ impl<T> ModificationType<T>
             T: AsPrimitive<V>
     {
         match self {
-            ModificationType::Multiplicative(x) => val.as_().mul(*self.deref()),
-            ModificationType::Additive(x) => val.as_().add(*self.deref()),
-            ModificationType::FittingCost(x) => val.as_().add(*self.deref()),
+            ModificationType::Multiplicative(x) => val.as_().mul(*x),
+            ModificationType::Additive(x) => val.as_().add(*x),
+            ModificationType::FittingCost(x) => val.as_().add(*x),
         }.as_()
     }
 }
