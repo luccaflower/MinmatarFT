@@ -84,22 +84,22 @@ where
             serde_yaml::from_reader::<_, HashMap<u64, TypeId>>(self.type_ids)
                 .unwrap()
                 .into_iter()
-                .filter(|(_, x)| x.published.clone())
+                .filter(|(_, x)| x.published)
                 .collect(),
             serde_yaml::from_reader::<_, HashMap<u64, GroupId>>(self.group_ids)
                 .unwrap()
                 .into_iter()
-                .filter(|(_, x)| x.published.clone())
+                .filter(|(_, x)| x.published)
                 .collect(),
             serde_yaml::from_reader::<_, HashMap<u64, CategoryId>>(self.category_ids)
                 .unwrap()
                 .into_iter()
-                .filter(|(_, x)| x.published.clone())
+                .filter(|(_, x)| x.published)
                 .collect(),
             serde_yaml::from_reader::<_, HashMap<u64, DogmaAttribute>>(self.dogma_attributes)
                 .unwrap()
                 .into_iter()
-                .filter(|(_, x)| x.published.clone())
+                .filter(|(_, x)| x.published)
                 .collect(),
             serde_yaml::from_reader::<_, HashMap<u64, TypeDogma>>(self.type_dogma).unwrap(),
         )
@@ -135,7 +135,7 @@ pub fn parse<'a, T: Into<InputSdeData>>(
                 .map(|x| {
                     (
                         x.attribute_id,
-                        x.value.clone(),
+                        x.value,
                         dogma_attributes.get(&x.attribute_id),
                     )
                 })
@@ -151,7 +151,7 @@ pub fn parse<'a, T: Into<InputSdeData>>(
     let ship_map = ships
         .into_iter()
         .map(|(t, g, c, v)| {
-            let ship_type = ship_type_by_id(t.group_id.clone());
+            let ship_type = ship_type_by_id(t.group_id);
             (t, g, c, v, ship_type)
         })
         .filter(|(_, _, _, _, ship_type)| ship_type.is_some())
@@ -169,7 +169,7 @@ pub fn parse<'a, T: Into<InputSdeData>>(
             let (turret_hard_points, _) = v.get(&101).unwrap();
             let (launcher_hard_points, _) = v.get(&102).unwrap();
             let (rig_slots, _) = v.get(&1154).unwrap();
-            let rig_size = match v.get(&1547).unwrap().0.clone() as u8 {
+            let rig_size = match v.get(&1547).unwrap().0 as u8 {
                 1 => RigSize::Small,
                 2 => RigSize::Medium,
                 3 => RigSize::Large,
@@ -241,60 +241,55 @@ pub fn parse<'a, T: Into<InputSdeData>>(
                 name,
                 ship_type,
                 faction,
-                high_slots.clone() as u8,
-                med_slots.clone() as u8,
-                low_slots.clone() as u8,
-                turret_hard_points.clone() as u8,
-                launcher_hard_points.clone() as u8,
-                rig_slots.clone() as u8,
+                *high_slots as u8,
+                *med_slots as u8,
+                *low_slots as u8,
+                *turret_hard_points as u8,
+                *launcher_hard_points as u8,
+                *rig_slots as u8,
                 rig_size,
                 sensor_strength_type,
-                Fitting::new(
-                    cpu.clone(),
-                    pg.clone(),
-                    calibration.clone() as u8,
-                    cargo.clone() as f32,
-                ),
+                Fitting::new(*cpu, *pg, *calibration as u8, cargo as f32),
                 Defense::new(
-                    hull_hp.clone() as u32,
-                    hull_em_resists.clone() as f32,
-                    hull_therm_resists.clone() as f32,
-                    hull_kin_resists.clone() as f32,
-                    hull_exp_resists.clone() as f32,
-                    armor_hp.clone() as u32,
-                    armor_em_resists.clone() as f32,
-                    armor_therm_resists.clone() as f32,
-                    armor_kin_resists.clone() as f32,
-                    armor_exp_resists.clone() as f32,
-                    shield_hp.clone() as u32,
-                    shield_em_resists.clone() as f32,
-                    shield_therm_resists.clone() as f32,
-                    shield_kin_resists.clone() as f32,
-                    shield_exp_resists.clone() as f32,
-                    sig_radius.clone() as u16,
+                    *hull_hp as u32,
+                    *hull_em_resists as f32,
+                    *hull_therm_resists as f32,
+                    *hull_kin_resists as f32,
+                    *hull_exp_resists as f32,
+                    *armor_hp as u32,
+                    *armor_em_resists as f32,
+                    *armor_therm_resists as f32,
+                    *armor_kin_resists as f32,
+                    *armor_exp_resists as f32,
+                    *shield_hp as u32,
+                    *shield_em_resists as f32,
+                    *shield_therm_resists as f32,
+                    *shield_kin_resists as f32,
+                    *shield_exp_resists as f32,
+                    *sig_radius as u16,
                 ),
                 Movement::new(
-                    velocity.clone() as u32,
-                    agility.clone() as f32,
-                    mass.clone() as u64,
-                    warp_speed.clone() as f32,
+                    *velocity as u32,
+                    *agility as f32,
+                    *mass as u64,
+                    *warp_speed as f32,
                 ),
                 Sensor::new(
-                    targeting_range.clone() as f32,
-                    scan_res.clone() as u16,
-                    sensor_strength.clone() as f32,
-                    max_locked_targets.clone() as u8,
+                    *targeting_range as f32,
+                    *scan_res as u16,
+                    *sensor_strength as f32,
+                    *max_locked_targets as u8,
                 ),
                 Drone::new(
-                    control_range.clone() as f32,
-                    capacity.clone() as u16,
-                    bandwidth.clone() as u16,
-                    max_drones.clone() as u8,
+                    control_range,
+                    *capacity as u16,
+                    *bandwidth as u16,
+                    max_drones,
                 ),
                 Capacitor::new(
-                    capacitor_amount.clone(),
-                    capacitor_recharge_time.clone() as u16,
-                    neut_resistance.clone() as f32,
+                    *capacitor_amount,
+                    *capacitor_recharge_time as u16,
+                    neut_resistance,
                 ),
             )
         })

@@ -24,9 +24,9 @@ impl<'a> Fit<'a> {
         }
         Self {
             ship,
-            high_slots: generate_empty(ship.high_slots.clone()),
-            med_slots: generate_empty(ship.med_slots.clone()),
-            low_slots: generate_empty(ship.low_slots.clone()),
+            high_slots: generate_empty(ship.high_slots),
+            med_slots: generate_empty(ship.med_slots),
+            low_slots: generate_empty(ship.low_slots),
         }
     }
 
@@ -41,7 +41,7 @@ impl<'a> Fit<'a> {
 
     fn convert_slot(&'a self, slots: &'a [Option<&'a Module>]) -> Vec<String> {
         slots
-            .into_iter()
+            .iter()
             .filter(|x| x.is_some())
             .map(|x| x.unwrap())
             .map(|x| x.name.to_string())
@@ -92,7 +92,7 @@ impl<'a> CompressedFit<'a> {
         modules: &'a HashMap<&'a str, Module<'a>>,
     ) -> Option<Fit> {
         fn create_module_lists<'a>(
-            names: &'a Vec<Cow<'a, str>>,
+            names: &'a [Cow<'a, str>],
             max: u8,
             modules: &'a HashMap<&'a str, Module<'a>>,
         ) -> Option<Box<[Option<&'a Module<'a>>]>> {
@@ -102,7 +102,7 @@ impl<'a> CompressedFit<'a> {
             let nones_to_add = (names.len() as u8) - max;
             Some(
                 names
-                    .into_iter()
+                    .iter()
                     .map(|x| modules.get(x.deref()))
                     .chain((0..nones_to_add).map(|_| None))
                     .collect::<Vec<Option<&Module>>>()

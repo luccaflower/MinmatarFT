@@ -1,6 +1,5 @@
 use proc_macro::TokenStream;
 use quote::{quote, ToTokens};
-use syn;
 use syn::{Data, Fields};
 
 #[proc_macro_derive(Stat)]
