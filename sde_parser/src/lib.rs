@@ -6,8 +6,13 @@ use crate::model::type_dogma::TypeDogma;
 use crate::model::type_id::TypeId;
 use crate::ship_type_ids::ship_type_by_id;
 use fitting_engine::faction::Faction;
-use fitting_engine::ship::Ship;
-use fitting_engine::ship_stats::ShipStats;
+use fitting_engine::ship::{RigSize, SensorStrengthType, Ship};
+use fitting_engine::stats::capacitor::Capacitor;
+use fitting_engine::stats::defense::Defense;
+use fitting_engine::stats::drone::Drone;
+use fitting_engine::stats::fitting::Fitting;
+use fitting_engine::stats::movement::Movement;
+use fitting_engine::stats::sensor::Sensor;
 use std::collections::{HashMap, HashSet};
 use std::io;
 
@@ -143,7 +148,6 @@ pub fn parse<'a, T: Into<InputSdeData>>(
         .filter(|x| x.is_some())
         .map(|x| x.unwrap())
         .partition(|(_, _, c, _)| c.name.en.as_ref() == Some(&"Ship".to_string()));
-    let mut attributes = HashMap::new();
     let ship_map = ships
         .into_iter()
         .map(|(t, g, c, v)| {
@@ -153,20 +157,74 @@ pub fn parse<'a, T: Into<InputSdeData>>(
         .filter(|(_, _, _, _, ship_type)| ship_type.is_some())
         .map(|(t, g, c, v, ship_type)| (t, g, c, v, ship_type.unwrap()))
         .map(|(t, g, c, v, ship_type)| {
-            for a in &v {
-                attributes.insert(a.0.clone(), a.1 .1.clone());
-            }
             let (low_slots, _) = v.get(&12).unwrap();
             let (med_slots, _) = v.get(&13).unwrap();
             let (high_slots, _) = v.get(&14).unwrap();
             let (shield_hp, _) = v.get(&263).unwrap();
             let (armor_hp, _) = v.get(&265).unwrap();
             let (hull_hp, _) = v.get(&9).unwrap();
+            let mass = &t.mass.unwrap();
+            let (pg, _) = v.get(&11).unwrap();
+            let (cpu, _) = v.get(&48).unwrap();
+            let (turret_hard_points, _) = v.get(&101).unwrap();
+            let (launcher_hard_points, _) = v.get(&102).unwrap();
+            let (rig_slots, _) = v.get(&1154).unwrap();
+            let rig_size = match v.get(&1547).unwrap().0.clone() as u8 {
+                1 => RigSize::Small,
+                2 => RigSize::Medium,
+                3 => RigSize::Large,
+                4 => RigSize::Capital,
+                _ => panic!("couldnt determine rig size"),
+            };
+
+            let (sensor_strength_type0, _) = v.get(&208).unwrap();
+            let (sensor_strength_type1, _) = v.get(&209).unwrap();
+            let (sensor_strength_type2, _) = v.get(&210).unwrap();
+            let (sensor_strength_type3, _) = v.get(&211).unwrap();
+            let (sensor_strength_type, sensor_strength) = if *sensor_strength_type0 as usize != 0 {
+                (SensorStrengthType::Ladar, sensor_strength_type0)
+            } else if *sensor_strength_type1 as usize != 0 {
+                (SensorStrengthType::Radar, sensor_strength_type1)
+            } else if *sensor_strength_type2 as usize != 0 {
+                (SensorStrengthType::Magnetometric, sensor_strength_type2)
+            } else if *sensor_strength_type3 as usize != 0 {
+                (SensorStrengthType::Gravimetric, sensor_strength_type3)
+            } else {
+                panic!("couldnt determine sensor strength type")
+            };
+
+            let (calibration, _) = v.get(&1132).unwrap();
+            let cargo = t.capacity.unwrap();
+            let (hull_em_resists, _) = v.get(&113).unwrap();
+            let (hull_therm_resists, _) = v.get(&110).unwrap();
+            let (hull_kin_resists, _) = v.get(&109).unwrap();
+            let (hull_exp_resists, _) = v.get(&111).unwrap();
+            let (armor_em_resists, _) = v.get(&267).unwrap();
+            let (armor_therm_resists, _) = v.get(&270).unwrap();
+            let (armor_kin_resists, _) = v.get(&269).unwrap();
+            let (armor_exp_resists, _) = v.get(&268).unwrap();
+            let (shield_em_resists, _) = v.get(&271).unwrap();
+            let (shield_therm_resists, _) = v.get(&274).unwrap();
+            let (shield_kin_resists, _) = v.get(&273).unwrap();
+            let (shield_exp_resists, _) = v.get(&272).unwrap();
+            let (sig_radius, _) = v.get(&552).unwrap();
+
             let (velocity, _) = v.get(&37).unwrap();
             let (agility, _) = v.get(&70).unwrap();
-            let mass = &t.mass.unwrap();
-            let (power_grid, _) = v.get(&11).unwrap();
-            let (cpu, _) = v.get(&48).unwrap();
+            let (warp_speed, _) = v.get(&600).unwrap();
+
+            let (targeting_range, _) = v.get(&76).unwrap();
+            let (scan_res, _) = v.get(&564).unwrap();
+            let (max_locked_targets, _) = v.get(&192).unwrap();
+
+            let control_range = 20f32;
+            let (capacity, _) = v.get(&283).unwrap();
+            let (bandwidth, _) = v.get(&1271).unwrap();
+            let max_drones = 0u8;
+
+            let (capacitor_amount, _) = v.get(&482).unwrap();
+            let (capacitor_recharge_time, _) = v.get(&55).unwrap();
+            let neut_resistance = 0f32;
 
             let name = t.name.en.unwrap();
             let faction = match t.faction_id {
@@ -186,20 +244,61 @@ pub fn parse<'a, T: Into<InputSdeData>>(
                 high_slots.clone() as u8,
                 med_slots.clone() as u8,
                 low_slots.clone() as u8,
-                ShipStats::new(
-                    shield_hp.clone() as usize,
-                    armor_hp.clone() as usize,
-                    hull_hp.clone() as usize,
-                    velocity.clone() as usize,
-                    agility.clone() as usize,
-                    mass.clone() as usize,
-                    power_grid.clone() as usize,
-                    cpu.clone() as usize,
+                turret_hard_points.clone() as u8,
+                launcher_hard_points.clone() as u8,
+                rig_slots.clone() as u8,
+                rig_size,
+                sensor_strength_type,
+                Fitting::new(
+                    cpu.clone(),
+                    pg.clone(),
+                    calibration.clone() as u8,
+                    cargo.clone() as f32,
+                ),
+                Defense::new(
+                    hull_hp.clone() as u32,
+                    hull_em_resists.clone() as f32,
+                    hull_therm_resists.clone() as f32,
+                    hull_kin_resists.clone() as f32,
+                    hull_exp_resists.clone() as f32,
+                    armor_hp.clone() as u32,
+                    armor_em_resists.clone() as f32,
+                    armor_therm_resists.clone() as f32,
+                    armor_kin_resists.clone() as f32,
+                    armor_exp_resists.clone() as f32,
+                    shield_hp.clone() as u32,
+                    shield_em_resists.clone() as f32,
+                    shield_therm_resists.clone() as f32,
+                    shield_kin_resists.clone() as f32,
+                    shield_exp_resists.clone() as f32,
+                    sig_radius.clone() as u16,
+                ),
+                Movement::new(
+                    velocity.clone() as u32,
+                    agility.clone() as f32,
+                    mass.clone() as u64,
+                    warp_speed.clone() as f32,
+                ),
+                Sensor::new(
+                    targeting_range.clone() as f32,
+                    scan_res.clone() as u16,
+                    sensor_strength.clone() as f32,
+                    max_locked_targets.clone() as u8,
+                ),
+                Drone::new(
+                    control_range.clone() as f32,
+                    capacity.clone() as u16,
+                    bandwidth.clone() as u16,
+                    max_drones.clone() as u8,
+                ),
+                Capacitor::new(
+                    capacitor_amount.clone(),
+                    capacitor_recharge_time.clone() as u16,
+                    neut_resistance.clone() as f32,
                 ),
             )
         })
         .map(|x| (x.name.to_string(), x))
         .collect();
-    println!("{:?}", attributes);
     Ok(ship_map)
 }
