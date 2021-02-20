@@ -6,12 +6,12 @@ use serde::{Deserialize, Serialize};
 pub struct Fitting {
     pub cpu: f64,
     pub pg: f64,
-    pub calibration: u8,
+    pub calibration: u16,
     pub cargo: f32,
 }
 
 impl Fitting {
-    pub fn new(cpu: f64, pg: f64, calibration: u8, cargo: f32) -> Self {
+    pub fn new(cpu: f64, pg: f64, calibration: u16, cargo: f32) -> Self {
         Self {
             cpu,
             pg,
