@@ -39,7 +39,7 @@ fn impl_stat_macro(ast: &syn::DeriveInput) -> TokenStream {
         .iter()
         .map(|(name, tt)| {
             format!(
-                "{}: crate::ship_type::stat_modification::ModificationType<{}>,",
+                "{}: crate::stats::ModificationType<{}>,",
                 name, tt
             )
         })
@@ -106,7 +106,7 @@ fn impl_stat_macro(ast: &syn::DeriveInput) -> TokenStream {
         impl Stat for #name {
             type Input = #mod_name;
             fn apply(&self, stat_mods: Vec<&Self::Input>) -> Self {
-                fn calculate<T>(base_val: T, mut additions: Vec<&crate::ship_type::stat_modification::ModificationType<T>>) -> T
+                fn calculate<T>(base_val: T, mut additions: Vec<&crate::stats::ModificationType<T>>) -> T
                 where
                     T: num_traits::NumOps + PartialEq + PartialOrd + Clone + num_traits::Zero,
                 {

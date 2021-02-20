@@ -3,7 +3,6 @@ pub mod battleship;
 pub mod cruiser;
 pub mod destroyer;
 pub mod frigate;
-pub mod stat_modification;
 
 use crate::ship_type::battlecruiser::BattlecruiserType;
 use crate::ship_type::battleship::BattleshipType;
