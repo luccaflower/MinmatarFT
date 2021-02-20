@@ -9,7 +9,8 @@ pub fn stat_macro_derive(input: TokenStream) -> TokenStream {
     let ast = syn::parse(input).unwrap();
 
     // Build the trait implementation
-    impl_stat_macro(&ast)
+    let a = impl_stat_macro(&ast);
+    a
 }
 
 fn impl_stat_macro(ast: &syn::DeriveInput) -> TokenStream {
@@ -37,34 +38,21 @@ fn impl_stat_macro(ast: &syn::DeriveInput) -> TokenStream {
         .unwrap();
     let mod_fields = types
         .iter()
-        .map(|(name, tt)| {
-            format!(
-                "pub {}: crate::stats::ModificationType<{}>,",
-                name, tt
-            )
-        })
+        .enumerate()
+        .map(|(i, (name, _))| format!("pub {}: crate::stats::ModificationType<_{}>,", name, i))
         .collect::<String>()
         .parse::<proc_macro2::TokenStream>()
         .unwrap();
     let new_arg_list = types
         .iter()
-        .map(|(name, tt)| {
-            format!(
-                "{}: crate::stats::ModificationType<{}>,",
-                name, tt
-            )
-        })
+        .enumerate()
+        .map(|(i, (name, _))| format!("{}: crate::stats::ModificationType<_{}>,", name, i))
         .collect::<String>()
         .parse::<proc_macro2::TokenStream>()
         .unwrap();
     let self_arg_list = types
         .iter()
-        .map(|(name, _)| {
-            format!(
-                "{},",
-                name
-            )
-        })
+        .map(|(name, _)| format!("{},", name))
         .collect::<String>()
         .parse::<proc_macro2::TokenStream>()
         .unwrap();
@@ -120,20 +108,46 @@ fn impl_stat_macro(ast: &syn::DeriveInput) -> TokenStream {
         .collect::<String>()
         .parse::<proc_macro2::TokenStream>()
         .unwrap();
+    let generic_list = types
+        .iter()
+        .enumerate()
+        .map(|(i, _)| format!("_{},", i))
+        .collect::<String>()
+        .parse::<proc_macro2::TokenStream>()
+        .unwrap();
+    let where_clause = types
+        .iter()
+        .enumerate()
+        .map(|(i, (_, tt))| {
+            format!(
+                r"
+        {0}: num_traits::cast::AsPrimitive<_{1}>,
+        _{1}: num_traits::NumOps
+        + PartialEq
+        + PartialOrd
+        + Clone
+        + num_traits::Zero
+        + num_traits::cast::AsPrimitive<{0}>,
+        ",
+                tt, i
+            )
+        })
+        .collect::<String>()
+        .parse::<proc_macro2::TokenStream>()
+        .unwrap();
     let gen = quote! {
-        pub struct #mod_name {
+        pub struct #mod_name<#generic_list> where #where_clause {
             #mod_fields
         }
 
-        impl #mod_name {
+        impl<#generic_list> #mod_name<#generic_list> where #where_clause {
             pub fn new(#new_arg_list) -> Self {
                 Self {#self_arg_list}
             }
         }
 
-        impl Stat for #name {
-            type Input = #mod_name;
-            fn apply(&self, stat_mods: Vec<&Self::Input>) -> Self {
+        impl<#generic_list> Stat<#mod_name<#generic_list>> for #name where #where_clause {
+            fn apply(&self, stat_mods: Vec<&#mod_name<#generic_list>>) -> Self {
                 fn calculate<T, V>(base_val: T, mut additions: Vec<&crate::stats::ModificationType<V>>) -> T
                 where
                     T: num_traits::cast::AsPrimitive<V>,
