@@ -142,7 +142,17 @@ mod tests {
         }
 
         #[test]
-        fn multiplicative() {}
+        fn multiplicative() {
+            let modification = SensorModifications::new(
+                ModificationType::Additive(0),
+                ModificationType::Multiplicative(1.2),
+                ModificationType::Additive(0),
+                ModificationType::Additive(0)
+            );
+            let expected = Sensor::new(50.0, 240, 32.0, 5);
+            let actual = SENSOR_STATS.apply(vec![&modification]);
+            assert_partial_eq!(expected, actual);
+        }
 
         #[test]
         fn additive_fitting_costs() {}
