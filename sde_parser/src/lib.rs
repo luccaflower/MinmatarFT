@@ -249,7 +249,7 @@ pub fn parse<'a, T: Into<InputSdeData>>(
                 *rig_slots as u8,
                 rig_size,
                 sensor_strength_type,
-                Fitting::new(*cpu, *pg, *calibration as u8, cargo as f32),
+                Fitting::new(*cpu, *pg, *calibration as u16, cargo as f32),
                 Defense::new(
                     *hull_hp as u32,
                     *hull_em_resists as f32,
