@@ -1,7 +1,7 @@
-use num_traits::{NumOps, Zero, AsPrimitive};
-use std::ops::Deref;
-use std::cmp::Ordering;
+use num_traits::{AsPrimitive, NumOps, Zero};
 use serde::{Deserialize, Serialize};
+use std::cmp::Ordering;
+use std::ops::Deref;
 
 pub mod capacitor;
 pub mod defense;
@@ -10,15 +10,14 @@ pub mod fitting;
 pub mod movement;
 pub mod sensor;
 
-pub trait Stat {
-    type Input;
-    fn apply(&self, stat_mods: Vec<&Self::Input>) -> Self;
+pub trait Stat<Input> {
+    fn apply(&self, stat_mods: Vec<&Input>) -> Self;
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ModificationType<T>
-    where
-        T: NumOps + PartialEq + PartialOrd,
+where
+    T: NumOps + PartialEq + PartialOrd,
 {
     Multiplicative(T),
     Additive(T),
@@ -26,8 +25,8 @@ pub enum ModificationType<T>
 }
 
 impl<T> ModificationType<T>
-    where
-        T: NumOps + PartialEq + PartialOrd,
+where
+    T: NumOps + PartialEq + PartialOrd,
 {
     pub fn additive(&self) -> bool {
         match self {
@@ -54,22 +53,23 @@ impl<T> ModificationType<T>
     }
 
     pub fn apply<'a, V: AsPrimitive<T>>(&self, val: V) -> V
-        where
-            T: Copy,
-            T: Clone,
-            T: 'a,
-            T: AsPrimitive<V>
+    where
+        T: Copy,
+        T: Clone,
+        T: 'a,
+        T: AsPrimitive<V>,
     {
         match self {
-            ModificationType::Multiplicative(x) => val.as_().mul(*self.deref()),
-            ModificationType::Additive(x) => val.as_().add(*self.deref()),
-            ModificationType::FittingCost(x) => val.as_().add(*self.deref()),
-        }.as_()
+            ModificationType::Multiplicative(x) => val.as_().mul(*x),
+            ModificationType::Additive(x) => val.as_().add(*x),
+            ModificationType::FittingCost(x) => val.as_().add(*x),
+        }
+        .as_()
     }
 }
 impl<T> ModificationType<T>
-    where
-        T: NumOps + PartialEq + PartialOrd + Zero,
+where
+    T: NumOps + PartialEq + PartialOrd + Zero,
 {
     pub fn default() -> Self {
         Self::Additive(num_traits::identities::zero())
@@ -77,8 +77,8 @@ impl<T> ModificationType<T>
 }
 
 impl<T> PartialEq for &ModificationType<T>
-    where
-        T: NumOps + PartialEq + PartialOrd,
+where
+    T: NumOps + PartialEq + PartialOrd,
 {
     fn eq(&self, other: &Self) -> bool {
         self.additive() == other.additive() && self.deref().eq(other)
@@ -86,8 +86,8 @@ impl<T> PartialEq for &ModificationType<T>
 }
 
 impl<T> PartialOrd for &ModificationType<T>
-    where
-        T: NumOps + PartialEq + PartialOrd,
+where
+    T: NumOps + PartialEq + PartialOrd,
 {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         let s: &T = self.deref();
@@ -96,8 +96,8 @@ impl<T> PartialOrd for &ModificationType<T>
 }
 
 impl<T> Deref for ModificationType<T>
-    where
-        T: NumOps + PartialEq + PartialOrd,
+where
+    T: NumOps + PartialEq + PartialOrd,
 {
     type Target = T;
 
@@ -112,40 +112,39 @@ impl<T> Deref for ModificationType<T>
 
 #[cfg(test)]
 mod tests {
-    use once_cell::sync::Lazy;
     use crate::stats::sensor::*;
+    use once_cell::sync::Lazy;
 
     macro_rules! assert_partial_eq {
         ($expected:ident, $actual:ident) => {
             assert!($expected.eq(&$actual))
-        }
+        };
     }
 
-    pub static SENSOR_STATS: Lazy<Sensor> = Lazy::new(|| {
-        Sensor::new(50.0, 200, 32.0, 5)
-    });
+    pub static SENSOR_STATS: Lazy<Sensor> = Lazy::new(|| Sensor::new(50.0, 200, 32.0, 5));
     mod stat_modifications_are {
-        use crate::stats::ModificationType;
         use crate::stats::sensor::*;
         use crate::stats::tests::SENSOR_STATS;
+        use crate::stats::ModificationType;
         use crate::stats::Stat;
 
         #[test]
         fn additive() {
-            let modification = SensorModifications::new(ModificationType::Additive(0.0), ModificationType::Additive(50), ModificationType::Additive(0.0), ModificationType::Additive(0));
+            let modification = SensorModifications::new(
+                ModificationType::Additive(0.0),
+                ModificationType::Additive(50),
+                ModificationType::Additive(0.0),
+                ModificationType::Additive(0),
+            );
             let expected = Sensor::new(50.0, 250, 32.0, 5);
             let actual = SENSOR_STATS.apply(vec![&modification]);
             assert_partial_eq!(expected, actual);
         }
 
         #[test]
-        fn multiplicative() {
-
-        }
+        fn multiplicative() {}
 
         #[test]
-        fn additive_fitting_costs() {
-
-        }
+        fn additive_fitting_costs() {}
     }
 }
