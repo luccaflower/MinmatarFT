@@ -217,7 +217,7 @@ pub fn parse<'a, T: Into<InputSdeData>>(
             let (scan_res, _) = v.get(&564).unwrap();
             let (max_locked_targets, _) = v.get(&192).unwrap();
 
-            let control_range = 20f32;
+            let control_range = 20u32;
             let (capacity, _) = v.get(&283).unwrap();
             let (bandwidth, _) = v.get(&1271).unwrap();
             let max_drones = 0u8;
