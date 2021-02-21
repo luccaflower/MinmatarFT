@@ -5,12 +5,20 @@ use std::borrow::Cow;
 use std::collections::HashMap;
 use std::ops::Deref;
 
+pub type BoxedModuleValue<T> = Box<dyn num_traits::NumOps
++ PartialEq
++ PartialOrd
++ Clone
++ num_traits::Zero
++ num_traits::cast::AsPrimitive<T>>;
+pub type Modules<'a> = Box<[Option<&'a Module<'a, BoxedModuleValue<f64>, BoxedModuleValue<u32>, BoxedModuleValue<u32>, BoxedModuleValue<u64>, BoxedModuleValue<f32>>>]>;
+
 #[derive(Debug, Clone)]
 pub struct Fit<'a> {
     ship: &'a Ship<'a>,
-    high_slots: Box<[Option<&'a Module<'a>>]>,
-    med_slots: Box<[Option<&'a Module<'a>>]>,
-    low_slots: Box<[Option<&'a Module<'a>>]>,
+    high_slots: Modules<'a>,
+    med_slots: Modules<'a>,
+    low_slots: Modules<'a>,
 }
 
 impl<'a> Fit<'a> {

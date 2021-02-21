@@ -68,9 +68,9 @@ where
     }
 }
 
-impl Default for ModificationType<u8> {
+impl Default for ModificationType<u64> {
     fn default() -> Self {
-        Self::Additive(0u8)
+        Self::Additive(0u64)
     }
 }
 
@@ -165,14 +165,6 @@ mod tests {
             );
             let expected = Fitting::new(200.0, 250.0, 400, 375.0);
             let actual = FITTING_STATS.apply(vec![&modification]);
-            //TODO:
-            //calibration    400 => 144
-            //cargo          375 => 255
-            //?????
-            println!(
-                "cpu: {}, pg: {}, calibration:{}, cargo:{}",
-                actual.cpu, actual.pg, actual.calibration, actual.cargo
-            );
             assert_partial_eq!(expected, actual);
         }
     }
@@ -199,13 +191,6 @@ mod tests {
             );
             let expected = Sensor::new(200.0, 200, 32.0, 5);
             let actual = SENSOR_STATS.apply(vec![&mod_multi, &mod_add]);
-            println!(
-                "targeting range {}, scan res: {}, sensor strength: {}, max targets: {}",
-                actual.targeting_range,
-                actual.scan_res,
-                actual.sensor_strength,
-                actual.max_locked_targets
-            );
             assert_partial_eq!(expected, actual);
         }
 
@@ -225,10 +210,6 @@ mod tests {
             );
             let expected = Fitting::new(200.0, 250.0, 400, 375.0);
             let actual = FITTING_STATS.apply(vec![&mod_fitting, &mod_multi]);
-            println!(
-                "cpu {}, pg: {}, calibration: {}, cargo: {}",
-                actual.cpu, actual.pg, actual.calibration, actual.cargo
-            );
             assert_partial_eq!(expected, actual);
         }
     }
