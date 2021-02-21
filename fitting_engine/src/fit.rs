@@ -129,9 +129,6 @@ mod tests {
     mod any_fit {
         fn has_a_slot_layout_matching_its_associated_ship() {}
     }
-    mod an_empty_fit {
-    }
-    mod a_nonempty_fit {
-
-    }
+    mod an_empty_fit {}
+    mod a_nonempty_fit {}
 }

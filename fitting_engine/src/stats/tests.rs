@@ -6,9 +6,17 @@ mod tests {
 
     macro_rules! assert_sensor_eq {
         ($expected:expr, $actual:expr) => {
-            approx::assert_relative_eq!($expected.targeting_range, $actual.targeting_range, epsilon = 0.01);
+            approx::assert_relative_eq!(
+                $expected.targeting_range,
+                $actual.targeting_range,
+                epsilon = 0.01
+            );
             assert_eq!($expected.scan_res, $actual.scan_res);
-            approx::assert_relative_eq!($expected.sensor_strength, $actual.sensor_strength, epsilon = 0.01);
+            approx::assert_relative_eq!(
+                $expected.sensor_strength,
+                $actual.sensor_strength,
+                epsilon = 0.01
+            );
             assert_eq!($expected.max_locked_targets, $actual.max_locked_targets);
         };
     }
@@ -72,9 +80,9 @@ mod tests {
     mod stat_modifications_are_applied {
         use crate::stats::fitting::*;
         use crate::stats::sensor::*;
+        use crate::stats::tests::tests::{FITTING_STATS, SENSOR_STATS};
         use crate::stats::ModificationType;
         use crate::stats::Stat;
-        use crate::stats::tests::tests::{SENSOR_STATS, FITTING_STATS};
 
         #[test]
         fn additive_before_multiplicative() {
