@@ -2,6 +2,7 @@ use num_traits::{AsPrimitive, NumOps};
 use serde::{Deserialize, Serialize};
 use std::cmp::Ordering;
 use std::ops::Deref;
+use std::fmt::Debug;
 
 pub mod capacitor;
 pub mod defense;
@@ -16,8 +17,8 @@ pub trait Stat<Input> {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ModificationType<T>
-where
-    T: NumOps + PartialEq + PartialOrd,
+    where
+        T: NumOps + PartialEq + PartialOrd,
 {
     Multiplicative(T),
     Additive(T),
@@ -25,8 +26,8 @@ where
 }
 
 impl<T> ModificationType<T>
-where
-    T: NumOps + PartialEq + PartialOrd,
+    where
+        T: NumOps + PartialEq + PartialOrd,
 {
     pub fn additive(&self) -> bool {
         match self {
@@ -53,18 +54,18 @@ where
     }
 
     pub fn apply<'a, V: AsPrimitive<T>>(&self, val: V) -> V
-    where
-        T: Copy,
-        T: Clone,
-        T: 'a,
-        T: AsPrimitive<V>,
+        where
+            T: Copy,
+            T: Clone,
+            T: 'a,
+            T: AsPrimitive<V>,
     {
         match self {
             ModificationType::Multiplicative(x) => val.as_().mul(*x),
             ModificationType::Additive(x) => val.as_().add(*x),
             ModificationType::FittingCost(x) => val.as_().sub(*x),
         }
-        .as_()
+            .as_()
     }
 }
 
@@ -74,28 +75,36 @@ impl Default for ModificationType<u64> {
     }
 }
 
-impl<T> PartialEq for &ModificationType<T>
-where
-    T: NumOps + PartialEq + PartialOrd,
+impl<T> PartialEq for ModificationType<T>
+    where
+        T: NumOps + PartialEq + PartialOrd,
 {
     fn eq(&self, other: &Self) -> bool {
         self.additive() == other.additive() && self.deref().eq(other)
     }
 }
 
-impl<T> PartialOrd for &ModificationType<T>
-where
-    T: NumOps + PartialEq + PartialOrd,
+impl<T> PartialOrd for ModificationType<T>
+    where
+        T: NumOps + PartialEq + PartialOrd,
 {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        let s: &T = self.deref();
-        s.partial_cmp(other.deref())
+        match (self, other) {
+            (Self::Additive(_), Self::Multiplicative(_)) => Some(Ordering::Greater),
+            (Self::Multiplicative(_), Self::FittingCost(_)) => Some(Ordering::Greater),
+            (Self::Multiplicative(_), Self::Additive(_)) => Some(Ordering::Less),
+            (Self::FittingCost(_), Self::Multiplicative(_)) => Some(Ordering::Less),
+            _ => {
+                let a: &T = self.deref();
+                a.partial_cmp(other)
+            }
+        }
     }
 }
 
 impl<T> Deref for ModificationType<T>
-where
-    T: NumOps + PartialEq + PartialOrd,
+    where
+        T: NumOps + PartialEq + PartialOrd,
 {
     type Target = T;
 
@@ -122,6 +131,7 @@ mod tests {
 
     pub static SENSOR_STATS: Lazy<Sensor> = Lazy::new(|| Sensor::new(50.0, 200, 32.0, 5));
     pub static FITTING_STATS: Lazy<Fitting> = Lazy::new(|| Fitting::new(250.0, 250.0, 400, 375.0));
+
     mod stat_modifications_are_of_the_types {
         use crate::stats::fitting::*;
         use crate::stats::sensor::*;
@@ -168,6 +178,7 @@ mod tests {
             assert_partial_eq!(expected, actual);
         }
     }
+
     mod stat_modifications_are_applied {
         use crate::stats::fitting::*;
         use crate::stats::sensor::*;

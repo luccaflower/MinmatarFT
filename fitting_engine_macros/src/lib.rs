@@ -156,7 +156,7 @@ fn impl_stat_macro(ast: &syn::DeriveInput) -> TokenStream {
                     T: num_traits::NumOps + PartialEq + PartialOrd + Clone + num_traits::Zero,
                     V: num_traits::NumOps + PartialEq + PartialOrd + Clone + num_traits::Zero,
                 {
-                    additions.sort_by(|a,b|a.partial_cmp(b).unwrap());
+                    additions.sort_by(|a,b|b.partial_cmp(a).unwrap());
                     additions.into_iter().fold(base_val, |acc, x| x.apply(acc))
                 }
                 let mut r = self.clone();
