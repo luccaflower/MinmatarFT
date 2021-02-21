@@ -1,17 +1,12 @@
 use crate::module::Module;
 use crate::ship::Ship;
+use num_traits::Num;
 use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
 use std::collections::HashMap;
 use std::ops::Deref;
 
-pub type BoxedModuleValue<T> = Box<dyn num_traits::NumOps
-+ PartialEq
-+ PartialOrd
-+ Clone
-+ num_traits::Zero
-+ num_traits::cast::AsPrimitive<T>>;
-pub type Modules<'a> = Box<[Option<&'a Module<'a, BoxedModuleValue<f64>, BoxedModuleValue<u32>, BoxedModuleValue<u32>, BoxedModuleValue<u64>, BoxedModuleValue<f32>>>]>;
+pub type Modules<'a> = Box<[Option<&'a Module<'a>>]>;
 
 #[derive(Debug, Clone)]
 pub struct Fit<'a> {

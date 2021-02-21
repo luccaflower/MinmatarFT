@@ -1,6 +1,6 @@
+use console_error_panic_hook::set_once;
 use wasm_bindgen::prelude::*;
 use yew::prelude::*;
-use console_error_panic_hook::set_once;
 
 struct Model {
     link: ComponentLink<Self>,
@@ -15,15 +15,12 @@ impl Component for Model {
     type Message = Msg;
     type Properties = ();
     fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
-        Self {
-            link,
-            value: 0,
-        }
+        Self { link, value: 0 }
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
-            Msg::AddOne => self.value += 1
+            Msg::AddOne => self.value += 1,
         }
         true
     }
