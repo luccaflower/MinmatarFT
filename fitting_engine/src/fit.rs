@@ -1,6 +1,5 @@
 use crate::module::Module;
 use crate::ship::Ship;
-use num_traits::Num;
 use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
 use std::collections::HashMap;
@@ -122,5 +121,17 @@ impl<'a> CompressedFit<'a> {
             med_slots,
             low_slots,
         })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    mod any_fit {
+        fn has_a_slot_layout_matching_its_associated_ship() {}
+    }
+    mod an_empty_fit {
+    }
+    mod a_nonempty_fit {
+
     }
 }
