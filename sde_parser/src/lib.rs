@@ -269,7 +269,7 @@ pub fn parse<'a, T: Into<InputSdeData>>(
                     *sig_radius as u16,
                 ),
                 Movement::new(
-                    *velocity as u32,
+                    *velocity as f64,
                     *agility as f32,
                     *mass as u64,
                     *warp_speed as f32,
