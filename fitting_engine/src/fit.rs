@@ -1,7 +1,7 @@
 use crate::fit_stats::FitStats;
 use crate::module_instance::ModuleInstance;
 use crate::ship::Ship;
-use crate::static_module::StaticModule;
+use crate::static_module::{ModuleSlot, StaticModule};
 use crate::stats::Stat;
 use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
@@ -42,6 +42,21 @@ impl<'a> Fit<'a> {
             self.convert_slot(self.med_slots.deref()),
             self.convert_slot(self.low_slots.deref()),
         )
+    }
+
+    pub fn add_module<'a>(&mut self, module: &'a StaticModule<'a>) -> bool {
+        let modules = match &module.module_slot {
+            ModuleSlot::High => &self.high_slots,
+            ModuleSlot::Med => &self.med_slots,
+            ModuleSlot::Low => &self.low_slots,
+            ModuleSlot::Rig => unimplemented!(),
+        };
+        for i in 0..modules.len() {
+            if modules[i].is_none() {
+                modules[i] = Some(ModuleInstance::new(module))
+            }
+        }
+        false
     }
 
     fn convert_slot(&'a self, slots: &'a [Option<ModuleInstance<'a>>]) -> Vec<String> {
