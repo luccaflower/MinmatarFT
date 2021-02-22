@@ -288,7 +288,7 @@ pub fn parse<'a, T: Into<InputSdeData>>(
                 ),
                 Capacitor::new(
                     *capacitor_amount,
-                    *capacitor_recharge_time as u16,
+                    *capacitor_recharge_time as u64,
                     neut_resistance,
                 ),
             )
