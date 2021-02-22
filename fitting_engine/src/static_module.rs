@@ -33,7 +33,7 @@ pub type MovementMod = Option<MovementModifications<f64, f64, f64, f64>>;
 pub type SensorMod = Option<SensorModifications<f64, f64, f64, u8>>;
 pub type DroneMod = Option<DroneModifications<u32, u16, u16, u8>>;
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct StaticModule<'a> {
     pub name: Cow<'a, str>,
 
@@ -52,6 +52,38 @@ pub struct StaticModule<'a> {
 }
 
 impl<'a> StaticModule<'a> {
+    pub fn new<T: Into<Cow<'a, str>>>(
+        name: T,
+
+        fitting: FittingMod,
+        capacitor: CapacitorMod,
+        passive_defense: DefenseMod,
+        active_defense: DefenseMod,
+        passive_movement: MovementMod,
+        active_movement: MovementMod,
+        passive_sensor: SensorMod,
+        active_sensor: SensorMod,
+        drone: DroneMod,
+
+        module_slot: ModuleSlot,
+        hard_point: Option<HardPoint>,
+    ) -> Self {
+        Self {
+            name: name.into(),
+            fitting,
+            capacitor,
+            passive_defense,
+            active_defense,
+            passive_movement,
+            active_movement,
+            passive_sensor,
+            active_sensor,
+            drone,
+            module_slot,
+            hard_point,
+        }
+    }
+
     pub fn active(&self) -> bool {
         self.active_defense.is_some()
             || self.active_movement.is_some()
@@ -99,7 +131,7 @@ impl<'a> StaticModule<'a> {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum ModuleSlot {
     High,
     Med,
@@ -107,7 +139,7 @@ pub enum ModuleSlot {
     Rig,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum HardPoint {
     Turret,
     Launcher,

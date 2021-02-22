@@ -7,7 +7,7 @@ use crate::stats::{
 use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct Ship<'a> {
     pub name: Cow<'a, str>,
     pub ship_type: ShipType,
@@ -72,7 +72,7 @@ impl Ship<'_> {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum RigSize {
     Small,
     Medium,
@@ -80,7 +80,7 @@ pub enum RigSize {
     Capital,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum SensorStrengthType {
     Ladar,
     Radar,

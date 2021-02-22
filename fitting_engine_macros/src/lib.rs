@@ -136,7 +136,7 @@ fn impl_stat_macro(ast: &syn::DeriveInput) -> TokenStream {
         .parse::<proc_macro2::TokenStream>()
         .unwrap();
     let gen = quote! {
-        #[derive(Debug, Clone, Serialize, Deserialize)]
+        #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
         pub struct #mod_name<#generic_list> where #where_clause {
             #mod_fields
         }

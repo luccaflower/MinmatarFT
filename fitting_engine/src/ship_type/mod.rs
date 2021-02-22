@@ -11,7 +11,7 @@ use crate::ship_type::destroyer::DestroyerType;
 use crate::ship_type::frigate::FrigateType;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum ShipType {
     Frigate(FrigateType),
     Destroyer(DestroyerType),

@@ -128,10 +128,10 @@ impl<'a> Into<CompressedFit<'a>> for Fit<'a> {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CompressedFit<'a> {
-    ship: Cow<'a, str>,
-    high_slots: Vec<Cow<'a, str>>,
-    med_slots: Vec<Cow<'a, str>>,
-    low_slots: Vec<Cow<'a, str>>,
+    pub ship: Cow<'a, str>,
+    pub high_slots: Vec<Cow<'a, str>>,
+    pub med_slots: Vec<Cow<'a, str>>,
+    pub low_slots: Vec<Cow<'a, str>>,
 }
 
 impl<'a> CompressedFit<'a> {
@@ -157,7 +157,7 @@ impl<'a> CompressedFit<'a> {
         }
     }
 
-    pub fn uncompress(
+    pub fn decompress(
         &self,
         ships: &'a HashMap<&'a str, Ship<'a>>,
         modules: &'a HashMap<&'a str, StaticModule<'a>>,
@@ -170,7 +170,7 @@ impl<'a> CompressedFit<'a> {
             if names.len() > max as usize {
                 return None;
             }
-            let nones_to_add = (names.len() as u8) - max;
+            let nones_to_add = max - (names.len() as u8);
             Some(
                 names
                     .iter()
