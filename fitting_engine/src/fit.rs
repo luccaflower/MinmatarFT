@@ -44,11 +44,11 @@ impl<'a> Fit<'a> {
         )
     }
 
-    pub fn add_module<'a>(&mut self, module: &'a StaticModule<'a>) -> bool {
+    pub fn add_module(&mut self, module: &'a StaticModule<'a>) -> bool {
         let modules = match &module.module_slot {
-            ModuleSlot::High => &self.high_slots,
-            ModuleSlot::Med => &self.med_slots,
-            ModuleSlot::Low => &self.low_slots,
+            ModuleSlot::High => &mut self.high_slots,
+            ModuleSlot::Med => &mut self.med_slots,
+            ModuleSlot::Low => &mut self.low_slots,
             ModuleSlot::Rig => unimplemented!(),
         };
         for i in 0..modules.len() {
