@@ -10,10 +10,10 @@ pub type Modules<'a> = Box<[Option<ModuleInstance<'a>>]>;
 
 #[derive(Debug, Clone)]
 pub struct Fit<'a> {
-    ship: &'a Ship<'a>,
-    high_slots: Modules<'a>,
-    med_slots: Modules<'a>,
-    low_slots: Modules<'a>,
+    pub ship: &'a Ship<'a>,
+    pub high_slots: Modules<'a>,
+    pub med_slots: Modules<'a>,
+    pub low_slots: Modules<'a>,
 }
 
 impl<'a> Fit<'a> {

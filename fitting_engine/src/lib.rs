@@ -5,3 +5,4 @@ pub mod ship;
 pub mod ship_type;
 pub mod static_module;
 pub mod stats;
+mod tests;
