@@ -53,7 +53,8 @@ impl<'a> Fit<'a> {
         };
         for i in 0..modules.len() {
             if modules[i].is_none() {
-                modules[i] = Some(ModuleInstance::new(module))
+                modules[i] = Some(ModuleInstance::new(module));
+                return true;
             }
         }
         false
