@@ -1,11 +1,12 @@
-use crate::module::Module;
+use crate::module_instance::ModuleInstance;
 use crate::ship::Ship;
+use crate::static_module::StaticModule;
 use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
 use std::collections::HashMap;
 use std::ops::Deref;
 
-pub type Modules<'a> = Box<[Option<&'a Module<'a>>]>;
+pub type Modules<'a> = Box<[Option<ModuleInstance<'a>>]>;
 
 #[derive(Debug, Clone)]
 pub struct Fit<'a> {
@@ -17,11 +18,11 @@ pub struct Fit<'a> {
 
 impl<'a> Fit<'a> {
     pub fn new(ship: &'a Ship) -> Self {
-        fn generate_empty<'a>(size: u8) -> Box<[Option<&'a Module<'a>>]> {
+        fn generate_empty<'a>(size: u8) -> Modules<'a> {
             (0..size)
                 .into_iter()
                 .map(|_| None)
-                .collect::<Vec<Option<&'a Module>>>()
+                .collect::<Vec<Option<ModuleInstance>>>()
                 .into_boxed_slice()
         }
         Self {
@@ -41,14 +42,73 @@ impl<'a> Fit<'a> {
         )
     }
 
-    fn convert_slot(&'a self, slots: &'a [Option<&'a Module>]) -> Vec<String> {
+    fn convert_slot(&'a self, slots: &'a [Option<ModuleInstance<'a>>]) -> Vec<String> {
         slots
             .iter()
             .filter(|x| x.is_some())
-            .map(|x| x.unwrap())
-            .map(|x| x.name.to_string())
+            .map(|x| x.as_ref().unwrap())
+            .map(|x| x.inner_module.name.to_string())
             .collect()
     }
+    /*
+    pub fn calculate_stats(&'a self) -> (Capacitor, Defense, Drone, Fitting, Movement, Sensor) {
+        fn maybe_push<T>(v: &mut Vec<&T>, t: &Option<T>) {
+            if let Some(val) = t {
+                v.push(val)
+            }
+        }
+        self.low_slots
+            .iter()
+            .chain(self.med_slots.iter())
+            .chain(self.high_slots.iter())
+            .filter(|x| x.is_some())
+            .map(|x| x.unwrap())
+            .fold(
+                (vec![], vec![], vec![], vec![], vec![], vec![]),
+                |(
+                    mut capacitor_vec,
+                    mut defense_vec,
+                    mut drone_vec,
+                    fitting_vec,
+                    movement_vec,
+                    sensor_vec,
+                ),
+                 x| {
+                    let StaticModule {
+                        passive_fitting,
+                        active_fitting,
+                        passive_capacitor,
+                        active_capacitor,
+                        passive_defense,
+                        active_defense,
+                        passive_movement,
+                        active_movement,
+                        passive_sensor,
+                        active_sensor,
+                        passive_drone,
+                        active_drone,
+                        ..
+                    } = x;
+                    maybe_push(&mut capacitor_vec, passive_capacitor);
+                    maybe_push(&mut capacitor_vec, active_capacitor);
+                    maybe_push(&mut defense_vec, passive_defense);
+                    maybe_push(&mut defense_vec, active_defense);
+                    maybe_push(&mut drone_vec, passive_drone);
+                    maybe_push(&mut drone_vec, active_drone);
+                    maybe_push(&mut drone_vec, passive_drone);
+                    maybe_push(&mut drone_vec, active_drone);
+                    (
+                        capacitor_vec,
+                        defense_vec,
+                        drone_vec,
+                        fitting_vec,
+                        movement_vec,
+                        sensor_vec,
+                    )
+                },
+            );
+    }
+     */
 }
 
 impl<'a> Into<CompressedFit<'a>> for Fit<'a> {
@@ -91,13 +151,13 @@ impl<'a> CompressedFit<'a> {
     pub fn uncompress(
         &self,
         ships: &'a HashMap<&'a str, Ship<'a>>,
-        modules: &'a HashMap<&'a str, Module<'a>>,
+        modules: &'a HashMap<&'a str, StaticModule<'a>>,
     ) -> Option<Fit> {
         fn create_module_lists<'a>(
             names: &'a [Cow<'a, str>],
             max: u8,
-            modules: &'a HashMap<&'a str, Module<'a>>,
-        ) -> Option<Box<[Option<&'a Module<'a>>]>> {
+            modules: &'a HashMap<&'a str, StaticModule<'a>>,
+        ) -> Option<Box<[Option<ModuleInstance<'a>>]>> {
             if names.len() > max as usize {
                 return None;
             }
@@ -105,9 +165,9 @@ impl<'a> CompressedFit<'a> {
             Some(
                 names
                     .iter()
-                    .map(|x| modules.get(x.deref()))
+                    .map(|x| modules.get(x.deref()).map(|x| ModuleInstance::new(x)))
                     .chain((0..nones_to_add).map(|_| None))
-                    .collect::<Vec<Option<&Module>>>()
+                    .collect::<Vec<Option<ModuleInstance>>>()
                     .into_boxed_slice(),
             )
         }
@@ -129,6 +189,8 @@ mod tests {
     mod any_fit {
         fn has_a_slot_layout_matching_its_associated_ship() {}
     }
+
     mod an_empty_fit {}
+
     mod a_nonempty_fit {}
 }
