@@ -11,4 +11,4 @@ fitting_engine = {path= "fitting_engine" }
 sde_parser = {path="sde_parser"}
 
 [workspace]
-members = ["fitting_engine", "static_data_macros", "static_data", "sde_parser", "sde_provider", "fitting_engine_macros", "web"]
+members = ["fitting_engine", "static_data_macros", "static_data", "sde_parser", "sde_provider", "fitting_engine_macros", "web/wasm_export"]
