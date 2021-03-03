@@ -1,22 +1,31 @@
 import {Interactor} from "./Interactor";
 import {WasmInstance} from "./instance";
+import {cacheCheck} from "./cache";
 
 export class FitInteractor {
+    private finalizationRegistry: FinalizationRegistry
+    private readonly finalizationRegistryToken: object
     private constructor(public wasm: WasmInstance, private ship_pointer: BigInt) {
-
+        this.finalizationRegistry = cacheCheck("fit_finalization_registry", () => new FinalizationRegistry(wasm.drop_fit))
+        this.finalizationRegistryToken = {}
+        this.finalizationRegistry.register(this, ship_pointer, this.finalizationRegistryToken)
     }
 
-    public static new(wasm: WasmInstance | Interactor, shipName: string): FitInteractor | null {
-        if (wasm instanceof Interactor) {
-            wasm = wasm.wasm
+    public drop() {
+        this.finalizationRegistry.unregister(this.finalizationRegistryToken)
+        this.wasm.drop_fit(this.ship_pointer)
+    }
+
+    public static new(_wasm: WasmInstance | Interactor, shipName: string): FitInteractor | null {
+        let wasm: WasmInstance;
+        if (_wasm instanceof Interactor) {
+            wasm = _wasm.wasm
         }
         let pointer = wasm.new_fit(shipName);
-        if(pointer == undefined) {
+        if (pointer == undefined) {
             return null
         }
-        let interactor = new FitInteractor(wasm, pointer);
-        new FinalizationRegistry(wasm.drop_fit).register(interactor, pointer)
-        return interactor
+        return new FitInteractor(wasm, pointer);
     }
 
     public set name(value: string) {
