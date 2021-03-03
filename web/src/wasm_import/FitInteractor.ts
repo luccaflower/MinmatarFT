@@ -1,6 +1,7 @@
 import {Interactor} from "./Interactor";
 import {WasmInstance} from "./instance";
 import {cacheCheck} from "./cache";
+import {CompressedFit} from "../types/CompressedFit";
 
 export class FitInteractor {
     private finalizationRegistry: FinalizationRegistry
@@ -34,5 +35,12 @@ export class FitInteractor {
 
     public get name(): string {
         return this.wasm.get_name_fit(this.ship_pointer)
+    }
+
+    public save() {
+        let str = this.wasm.compress_fit(this.ship_pointer);
+        let compressed: CompressedFit = JSON.parse(str);
+        console.log(compressed)
+        localStorage.setItem("fit_" + compressed.name, JSON.stringify(compressed))
     }
 }

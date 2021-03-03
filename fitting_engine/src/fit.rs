@@ -7,6 +7,8 @@ use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
 use std::collections::HashMap;
 use std::ops::Deref;
+#[cfg(feature = "ts")]
+use ts_rs::TS;
 
 pub type Modules<'a> = Box<[Option<ModuleInstance<'a>>]>;
 
@@ -132,6 +134,7 @@ impl<'a> Into<CompressedFit<'a>> for Fit<'a> {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(TS))]
 pub struct CompressedFit<'a> {
     pub name: Cow<'a, str>,
     pub ship: Cow<'a, str>,

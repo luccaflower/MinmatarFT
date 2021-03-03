@@ -8,4 +8,5 @@ import {FitInteractor} from "./src/wasm_import/FitInteractor";
     let fit_interactor = FitInteractor.new(interactor, interactor.ship_names[0]);
     fit_interactor.name = "cool name"
     console.log(fit_interactor.name)
+    fit_interactor.save()
 })()

@@ -1,6 +1,6 @@
 import {getWasmInstance, WasmInstance} from "./instance";
 import {cacheCheck} from "./cache";
-import {Ship} from "../types/ships";
+import {Ship} from "../types/Ship";
 
 export class Interactor {
     private constructor(public wasm: WasmInstance) {

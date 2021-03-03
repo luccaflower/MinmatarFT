@@ -51,3 +51,9 @@ pub fn get_name_fit(fit: u64) -> String {
 pub fn fetch_ship_by_name(name: String) -> Option<String> {
     serde_json::to_string(static_data::get_all().iter().find(|x| x.name == name)?).ok()
 }
+
+#[wasm_bindgen]
+pub fn compress_fit(fit: u64) -> String {
+    let fit = use_pointer::<Fit>(fit).clone().compress();
+    serde_json::to_string(&fit).unwrap()
+}

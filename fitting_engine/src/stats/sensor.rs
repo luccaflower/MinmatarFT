@@ -1,8 +1,11 @@
 use crate::stats::Stat;
 use fitting_engine_macros::*;
 use serde::{Deserialize, Serialize};
+#[cfg(feature = "ts")]
+use ts_rs::TS;
 
 #[derive(Debug, Clone, Serialize, Stat, Deserialize, PartialEq)]
+#[cfg_attr(feature = "ts", derive(TS))]
 pub struct Sensor {
     pub targeting_range: f32,
     pub scan_res: u16,
