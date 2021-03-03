@@ -2,6 +2,7 @@ pub mod manual_memory;
 
 use crate::manual_memory::{create_pointer, drop_pointer, use_pointer, use_pointer_mut};
 use fitting_engine::fit::Fit;
+use fitting_engine::ship::Ship;
 use std::borrow::Cow;
 use std::ops::Deref;
 use wasm_bindgen::prelude::*;
@@ -13,6 +14,11 @@ pub fn all_ship_names() -> String {
         .map(|x| x.name.deref())
         .collect::<Vec<&str>>();
     serde_json::to_string(&inner).unwrap()
+}
+
+#[wasm_bindgen]
+pub fn all_ships() -> String {
+    serde_json::to_string(static_data::get_all()).unwrap()
 }
 
 #[wasm_bindgen]
@@ -39,4 +45,9 @@ pub fn rename_fit(fit: u64, ship_name: String) {
 pub fn get_name_fit(fit: u64) -> String {
     let fit = use_pointer::<Fit>(fit);
     fit.name.to_string()
+}
+
+#[wasm_bindgen]
+pub fn fetch_ship_by_name(name: String) -> Option<String> {
+    serde_json::to_string(static_data::get_all().iter().find(|x| x.name == name)?).ok()
 }
