@@ -1,6 +1,6 @@
 import {getWasmInstance, WasmInstance} from "./instance";
 import {cacheCheck} from "./cache";
-import {Ship} from "../types/Ship";
+import {Ship} from "../../gen/types/Ship";
 import {FitInteractor} from "./FitInteractor";
 
 export class Interactor {
@@ -22,7 +22,7 @@ export class Interactor {
     }
 
     public fetchShip(name: string): Ship | null {
-        return this.wasm.fetch_ship_by_name(name)
+        return cacheCheck("ship_with_name_" + name, () => this.wasm.fetch_ship_by_name(name))
     }
 
     public newFit(shipName: string, fitName: string | null = null): FitInteractor | null {

@@ -1,7 +1,7 @@
 import {Interactor} from "./Interactor";
 import {WasmInstance} from "./instance";
 import {cacheCheck} from "./cache";
-import {CompressedFit} from "../types/CompressedFit";
+import {CompressedFit} from "../../gen/types/CompressedFit";
 
 export class FitInteractor {
     private finalizationRegistry: FinalizationRegistry

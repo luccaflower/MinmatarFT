@@ -23,7 +23,6 @@ export! {
     Ship => "bindings/Ship.ts",
     SensorStrengthType => "bindings/SensorStrengthType.ts",
     RigSize => "bindings/RigSize.ts",
-    ShipType => "bindings/ShipType.ts",
     Fitting => "bindings/Fitting.ts",
     Defense => "bindings/Defense.ts",
     Movement => "bindings/Movement.ts",
@@ -36,4 +35,5 @@ export! {
     CruiserType => "bindings/CruiserType.ts",
     BattlecruiserType => "bindings/BattlecruiserType.ts",
     BattleshipType => "bindings/BattleshipType.ts",
+    ShipType => "bindings/ShipType.ts",
 }
