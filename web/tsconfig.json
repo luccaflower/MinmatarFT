@@ -13,5 +13,5 @@
     ],
     "moduleResolution": "node"
   },
-  "exclude": ["gen_overwrite", "gen"]
+  "exclude": ["gen_overwrite"]
 }
