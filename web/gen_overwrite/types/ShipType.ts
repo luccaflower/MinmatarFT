@@ -4,8 +4,8 @@ import {BattlecruiserType} from "./BattlecruiserType";
 import {BattleshipType} from "./BattleshipType";
 import {DestroyerType} from "./DestroyerType";
 
-export type ShipType = ["Frigate" | "Destroyer" | "Cruiser" | "Battlecruiser" | "Battleship", FrigateType |
-DestroyerType |
-CruiserType |
-BattlecruiserType |
-BattleshipType];
+export type ShipType = ["Frigate", FrigateType] |
+["Destroyer", DestroyerType] |
+    ["Cruiser", CruiserType] |
+    ["Battlecruiser", BattlecruiserType] |
+    ["Battleship", BattleshipType];
