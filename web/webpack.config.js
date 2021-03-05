@@ -54,6 +54,7 @@ module.exports = {
                             })
                         })
                         await cpy([path.resolve(fittingEngineGen, "bindings") + "/*"], "gen/types/")
+                        await cpy(["gen_overwrite/types/*"], "gen/types/")
                     }
                 ],
                 blocking: false,

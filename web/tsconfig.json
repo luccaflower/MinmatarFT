@@ -12,5 +12,6 @@
       "esnext.weakref"
     ],
     "moduleResolution": "node"
-  }
+  },
+  "exclude": ["gen_overwrite", "gen"]
 }
