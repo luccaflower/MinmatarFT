@@ -37,10 +37,12 @@ export class FitInteractor {
         return this.wasm.get_name_fit(this.ship_pointer)
     }
 
+    public compress(): CompressedFit {
+        return this.wasm.compress_fit(this.ship_pointer)
+    }
+
     public save() {
-        let str = this.wasm.compress_fit(this.ship_pointer);
-        let compressed: CompressedFit = JSON.parse(str);
-        console.log(compressed)
+        let compressed = this.compress();
         localStorage.setItem("fit_" + compressed.name, JSON.stringify(compressed))
     }
 }

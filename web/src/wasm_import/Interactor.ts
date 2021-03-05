@@ -1,6 +1,7 @@
 import {getWasmInstance, WasmInstance} from "./instance";
 import {cacheCheck} from "./cache";
 import {Ship} from "../types/Ship";
+import {FitInteractor} from "./FitInteractor";
 
 export class Interactor {
     private constructor(public wasm: WasmInstance) {
@@ -12,19 +13,27 @@ export class Interactor {
         return new Interactor(wasm)
     }
 
-    public get ship_names(): string[] {
-        return cacheCheck("all_ship_names", () => JSON.parse(this.wasm.all_ship_names()))
+    public get shipNames(): string[] {
+        return cacheCheck("all_ship_names", () => this.wasm.all_ship_names())
     }
 
     public get ships(): Ship[] {
-        return cacheCheck("all_ships", () => JSON.parse(this.wasm.all_ships()))
+        return cacheCheck("all_ships", () => this.wasm.all_ships())
     }
 
-    public fetch_ship(name: string): Ship | null {
-        let ship = this.wasm.fetch_ship_by_name(name)
-        if (!ship) {
+    public fetchShip(name: string): Ship | null {
+        return this.wasm.fetch_ship_by_name(name)
+    }
+
+    public newFit(shipName: string, fitName: string | null = null): FitInteractor | null {
+        let fit = FitInteractor.new(this, shipName)
+        if (fit !== null) {
+            if (fitName !== null) {
+                fit.name = fitName
+            }
+            return fit
+        } else {
             return null
         }
-        return JSON.parse(ship)
     }
 }
