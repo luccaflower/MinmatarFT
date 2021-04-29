@@ -1,3 +1,8 @@
 /target
 /.vscode
 /__static_data
+/web/node_modules
+/web/dist
+/web/pkg
+/fitting_engine_ts_gen/bindings
+/web/gen/

@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "noImplicitAny": true,
+    "module": "es2020",
+    "target": "es5",
+    "jsx": "react",
+    "lib": [
+      "dom",
+      "es5",
+      "scripthost",
+      "esnext.weakref"
+    ],
+    "moduleResolution": "node"
+  },
+  "exclude": ["gen_overwrite"]
+}

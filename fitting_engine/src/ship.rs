@@ -6,8 +6,11 @@ use crate::stats::{
 };
 use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
+#[cfg(feature = "ts")]
+use ts_rs::TS;
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[cfg_attr(feature = "ts", derive(TS))]
 pub struct Ship<'a> {
     pub name: Cow<'a, str>,
     pub ship_type: ShipType,
@@ -72,7 +75,8 @@ impl Ship<'_> {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[cfg_attr(feature = "ts", derive(TS))]
 pub enum RigSize {
     Small,
     Medium,
@@ -80,7 +84,8 @@ pub enum RigSize {
     Capital,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[cfg_attr(feature = "ts", derive(TS))]
 pub enum SensorStrengthType {
     Ladar,
     Radar,

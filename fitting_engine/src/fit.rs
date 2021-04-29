@@ -7,11 +7,14 @@ use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
 use std::collections::HashMap;
 use std::ops::Deref;
+#[cfg(feature = "ts")]
+use ts_rs::TS;
 
 pub type Modules<'a> = Box<[Option<ModuleInstance<'a>>]>;
 
 #[derive(Debug, Clone)]
 pub struct Fit<'a> {
+    pub name: Cow<'a, str>,
     pub ship: &'a Ship<'a>,
     pub high_slots: Modules<'a>,
     pub med_slots: Modules<'a>,
@@ -19,7 +22,11 @@ pub struct Fit<'a> {
 }
 
 impl<'a> Fit<'a> {
-    pub fn new(ship: &'a Ship) -> Self {
+    pub fn rename<S: Into<Cow<'a, str>>>(&mut self, name: S) {
+        self.name = name.into();
+    }
+
+    pub fn new<S: Into<Cow<'a, str>>>(name: S, ship: &'a Ship) -> Self {
         fn generate_empty<'a>(size: u8) -> Modules<'a> {
             (0..size)
                 .into_iter()
@@ -28,6 +35,7 @@ impl<'a> Fit<'a> {
                 .into_boxed_slice()
         }
         Self {
+            name: name.into(),
             ship,
             high_slots: generate_empty(ship.high_slots),
             med_slots: generate_empty(ship.med_slots),
@@ -36,12 +44,11 @@ impl<'a> Fit<'a> {
     }
 
     pub fn compress(self) -> CompressedFit<'a> {
-        CompressedFit::new(
-            self.ship.name.deref(),
-            self.convert_slot(self.high_slots.deref()),
-            self.convert_slot(self.med_slots.deref()),
-            self.convert_slot(self.low_slots.deref()),
-        )
+        let high_slots = self.convert_slot(self.high_slots.deref());
+        let med_slots = self.convert_slot(self.med_slots.deref());
+        let low_slots = self.convert_slot(self.low_slots.deref());
+        let Fit { name, ship, .. } = self;
+        CompressedFit::new(name, ship.name.deref(), high_slots, med_slots, low_slots)
     }
 
     pub fn add_module(&mut self, module: &'a StaticModule<'a>) -> bool {
@@ -131,15 +138,18 @@ impl<'a> Into<CompressedFit<'a>> for Fit<'a> {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(TS))]
 pub struct CompressedFit<'a> {
-    ship: Cow<'a, str>,
-    high_slots: Vec<Cow<'a, str>>,
-    med_slots: Vec<Cow<'a, str>>,
-    low_slots: Vec<Cow<'a, str>>,
+    pub name: Cow<'a, str>,
+    pub ship: Cow<'a, str>,
+    pub high_slots: Vec<Cow<'a, str>>,
+    pub med_slots: Vec<Cow<'a, str>>,
+    pub low_slots: Vec<Cow<'a, str>>,
 }
 
 impl<'a> CompressedFit<'a> {
     pub fn new<
+        N: Into<Cow<'a, str>>,
         O: Into<Cow<'a, str>>,
         AI: Into<Cow<'a, str>>,
         A: IntoIterator<Item = AI>,
@@ -148,12 +158,14 @@ impl<'a> CompressedFit<'a> {
         CI: Into<Cow<'a, str>>,
         C: IntoIterator<Item = CI>,
     >(
+        name: N,
         ship: O,
         high_slots: A,
         med_slots: B,
         low_slots: C,
     ) -> Self {
         Self {
+            name: name.into(),
             ship: ship.into(),
             high_slots: high_slots.into_iter().map(|x| x.into()).collect(),
             med_slots: med_slots.into_iter().map(|x| x.into()).collect(),
@@ -161,7 +173,7 @@ impl<'a> CompressedFit<'a> {
         }
     }
 
-    pub fn uncompress(
+    pub fn decompress(
         &self,
         ships: &'a HashMap<&'a str, Ship<'a>>,
         modules: &'a HashMap<&'a str, StaticModule<'a>>,
@@ -174,7 +186,7 @@ impl<'a> CompressedFit<'a> {
             if names.len() > max as usize {
                 return None;
             }
-            let nones_to_add = (names.len() as u8) - max;
+            let nones_to_add = max - (names.len() as u8);
             Some(
                 names
                     .iter()
@@ -194,6 +206,7 @@ impl<'a> CompressedFit<'a> {
         let low_slots =
             create_module_lists(&self.low_slots, ship.low_slots, modules)?;
         Some(Fit {
+            name: Cow::Borrowed(""),
             ship,
             high_slots,
             med_slots,

@@ -2,7 +2,6 @@ use num_traits::{AsPrimitive, NumOps};
 use serde::{Deserialize, Serialize};
 use std::cmp::Ordering;
 use std::ops::Deref;
-
 pub mod capacitor;
 pub mod defense;
 pub mod drone;

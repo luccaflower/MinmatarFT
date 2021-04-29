@@ -1,5 +1,5 @@
 [package]
-name = "sde_parser"
+name = "fitting_engine_ts_gen"
 version = "0.1.0"
 authors = ["Lucca Kaasgaard Christiansen <1078059@ucn.dk>", "Alexandra Østermark <alex.cramt@gmail.com>"]
 edition = "2018"
@@ -7,7 +7,5 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-serde = { version = "1.0", features = ["derive"] }
-serde_yaml = "0.8"
-fitting_engine = { path = "../fitting_engine" }
-
+ts-rs = {git = "https://github.com/cramt/ts-rs.git", branch = "main"}
+fitting_engine = {path = "../fitting_engine", features=["ts"]}

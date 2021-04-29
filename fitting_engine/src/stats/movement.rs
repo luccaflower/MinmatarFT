@@ -1,8 +1,11 @@
 use crate::stats::Stat;
 use fitting_engine_macros::*;
 use serde::{Deserialize, Serialize};
+#[cfg(feature = "ts")]
+use ts_rs::TS;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Stat, PartialEq)]
+#[cfg_attr(feature = "ts", derive(TS))]
 pub struct Movement {
     pub max_velocity: f64,
     pub agility: f32,

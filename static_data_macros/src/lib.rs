@@ -12,7 +12,11 @@ use tokio::runtime::Runtime;
 
 #[proc_macro]
 pub fn generate_all_data(_: TokenStream) -> TokenStream {
-    let json_dir = Path::new("__static_data").join("json");
+    let static_dir = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .parent()
+        .unwrap()
+        .join("__static_data");
+    let json_dir = static_dir.join("json");
     let ships = if json_dir.exists() {
         serde_json::from_reader::<_, Vec<Ship>>(
             File::open(json_dir.join("ships.json"))
@@ -23,8 +27,11 @@ pub fn generate_all_data(_: TokenStream) -> TokenStream {
     } else {
         create_dir_all(&json_dir).unwrap();
         let runtime = Runtime::new().unwrap();
-        let args = runtime
-            .block_on(SdeProvider::new().cached("__static_data").execute());
+        let args = runtime.block_on(
+            SdeProvider::new()
+                .cached(static_dir.to_string_lossy())
+                .execute(),
+        );
         let result = sde_parser::parse(args).unwrap();
         let mut file = File::create(json_dir.join("ships.json")).unwrap();
         let json = serde_json::to_string(
