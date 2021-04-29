@@ -90,10 +90,18 @@ where
 {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         match (self, other) {
-            (Self::Additive(_), Self::Multiplicative(_)) => Some(Ordering::Greater),
-            (Self::Multiplicative(_), Self::FittingCost(_)) => Some(Ordering::Greater),
-            (Self::Multiplicative(_), Self::Additive(_)) => Some(Ordering::Less),
-            (Self::FittingCost(_), Self::Multiplicative(_)) => Some(Ordering::Less),
+            (Self::Additive(_), Self::Multiplicative(_)) => {
+                Some(Ordering::Greater)
+            }
+            (Self::Multiplicative(_), Self::FittingCost(_)) => {
+                Some(Ordering::Greater)
+            }
+            (Self::Multiplicative(_), Self::Additive(_)) => {
+                Some(Ordering::Less)
+            }
+            (Self::FittingCost(_), Self::Multiplicative(_)) => {
+                Some(Ordering::Less)
+            }
             _ => {
                 let a: &T = self.deref();
                 a.partial_cmp(other)

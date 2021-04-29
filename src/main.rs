@@ -1,7 +1,6 @@
 use sde_parser::ParserArgument;
 use std::fs::File;
 use std::path::Path;
-
 fn static_dir_path() -> &'static Path {
     Path::new("__static_data")
 }

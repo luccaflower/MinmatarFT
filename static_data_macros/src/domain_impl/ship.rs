@@ -36,11 +36,14 @@ impl ToTokens for ShipWrapper<'_> {
             SensorStrengthTypeWrapper::new(self.0.sensor_strength_type.clone());
 
         let fitting_stats = FittingWrapper::new(self.0.fitting_stats.clone());
-        let defensive_stats = DefenseWrapper::new(self.0.defensive_stats.clone());
-        let movement_stats = MovementWrapper::new(self.0.movement_stats.clone());
+        let defensive_stats =
+            DefenseWrapper::new(self.0.defensive_stats.clone());
+        let movement_stats =
+            MovementWrapper::new(self.0.movement_stats.clone());
         let sensor_stats = SensorWrapper::new(self.0.sensor_stats.clone());
         let drone_stats = DroneWrapper::new(self.0.drone_stats.clone());
-        let capacitor_stats = CapacitorWrapper::new(self.0.capacitor_stats.clone());
+        let capacitor_stats =
+            CapacitorWrapper::new(self.0.capacitor_stats.clone());
 
         let lok = quote::quote! {
             fitting_engine::ship::Ship {

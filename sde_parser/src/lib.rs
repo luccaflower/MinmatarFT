@@ -91,17 +91,24 @@ where
                 .into_iter()
                 .filter(|(_, x)| x.published)
                 .collect(),
-            serde_yaml::from_reader::<_, HashMap<u64, CategoryId>>(self.category_ids)
-                .unwrap()
-                .into_iter()
-                .filter(|(_, x)| x.published)
-                .collect(),
-            serde_yaml::from_reader::<_, HashMap<u64, DogmaAttribute>>(self.dogma_attributes)
-                .unwrap()
-                .into_iter()
-                .filter(|(_, x)| x.published)
-                .collect(),
-            serde_yaml::from_reader::<_, HashMap<u64, TypeDogma>>(self.type_dogma).unwrap(),
+            serde_yaml::from_reader::<_, HashMap<u64, CategoryId>>(
+                self.category_ids,
+            )
+            .unwrap()
+            .into_iter()
+            .filter(|(_, x)| x.published)
+            .collect(),
+            serde_yaml::from_reader::<_, HashMap<u64, DogmaAttribute>>(
+                self.dogma_attributes,
+            )
+            .unwrap()
+            .into_iter()
+            .filter(|(_, x)| x.published)
+            .collect(),
+            serde_yaml::from_reader::<_, HashMap<u64, TypeDogma>>(
+                self.type_dogma,
+            )
+            .unwrap(),
         )
     }
 }
@@ -109,7 +116,8 @@ where
 pub fn parse<'a, T: Into<InputSdeData>>(
     input: T,
 ) -> Result<OutputSdeData<'a>, Box<dyn std::error::Error>> {
-    let (type_ids, group_ids, category_ids, dogma_attributes, type_dogmas) = input.into();
+    let (type_ids, group_ids, category_ids, dogma_attributes, type_dogmas) =
+        input.into();
     let (ships, _rest_data): (
         Vec<(
             TypeId,
@@ -147,7 +155,9 @@ pub fn parse<'a, T: Into<InputSdeData>>(
         })
         .filter(|x| x.is_some())
         .map(|x| x.unwrap())
-        .partition(|(_, _, c, _)| c.name.en.as_ref() == Some(&"Ship".to_string()));
+        .partition(|(_, _, c, _)| {
+            c.name.en.as_ref() == Some(&"Ship".to_string())
+        });
     let ship_map = ships
         .into_iter()
         .map(|(t, g, c, v)| {
@@ -181,17 +191,18 @@ pub fn parse<'a, T: Into<InputSdeData>>(
             let (sensor_strength_type1, _) = v.get(&209).unwrap();
             let (sensor_strength_type2, _) = v.get(&210).unwrap();
             let (sensor_strength_type3, _) = v.get(&211).unwrap();
-            let (sensor_strength_type, sensor_strength) = if *sensor_strength_type0 as usize != 0 {
-                (SensorStrengthType::Ladar, sensor_strength_type0)
-            } else if *sensor_strength_type1 as usize != 0 {
-                (SensorStrengthType::Radar, sensor_strength_type1)
-            } else if *sensor_strength_type2 as usize != 0 {
-                (SensorStrengthType::Magnetometric, sensor_strength_type2)
-            } else if *sensor_strength_type3 as usize != 0 {
-                (SensorStrengthType::Gravimetric, sensor_strength_type3)
-            } else {
-                panic!("couldnt determine sensor strength type")
-            };
+            let (sensor_strength_type, sensor_strength) =
+                if *sensor_strength_type0 as usize != 0 {
+                    (SensorStrengthType::Ladar, sensor_strength_type0)
+                } else if *sensor_strength_type1 as usize != 0 {
+                    (SensorStrengthType::Radar, sensor_strength_type1)
+                } else if *sensor_strength_type2 as usize != 0 {
+                    (SensorStrengthType::Magnetometric, sensor_strength_type2)
+                } else if *sensor_strength_type3 as usize != 0 {
+                    (SensorStrengthType::Gravimetric, sensor_strength_type3)
+                } else {
+                    panic!("couldnt determine sensor strength type")
+                };
 
             let (calibration, _) = v.get(&1132).unwrap();
             let cargo = t.capacity.unwrap();

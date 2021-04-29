@@ -10,7 +10,11 @@ pub struct Capacitor {
 }
 
 impl Capacitor {
-    pub fn new(capacitor_amount: f64, capacitor_recharge_time: u16, neut_resistance: f32) -> Self {
+    pub fn new(
+        capacitor_amount: f64,
+        capacitor_recharge_time: u16,
+        neut_resistance: f32,
+    ) -> Self {
         Self {
             capacitor_amount,
             capacitor_recharge_time,

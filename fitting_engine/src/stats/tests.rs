@@ -17,20 +17,37 @@ mod tests {
                 $actual.sensor_strength,
                 epsilon = 0.01
             );
-            assert_eq!($expected.max_locked_targets, $actual.max_locked_targets);
+            assert_eq!(
+                $expected.max_locked_targets,
+                $actual.max_locked_targets
+            );
         };
     }
     macro_rules! assert_fitting_eq {
         ($expected:expr, $actual:expr) => {
-            approx::assert_relative_eq!($expected.cpu, $actual.cpu, epsilon = 0.01);
-            approx::assert_relative_eq!($expected.pg, $actual.pg, epsilon = 0.01);
+            approx::assert_relative_eq!(
+                $expected.cpu,
+                $actual.cpu,
+                epsilon = 0.01
+            );
+            approx::assert_relative_eq!(
+                $expected.pg,
+                $actual.pg,
+                epsilon = 0.01
+            );
             assert_eq!($expected.calibration, $actual.calibration);
-            approx::assert_relative_eq!($expected.cargo, $actual.cargo, epsilon = 0.01);
+            approx::assert_relative_eq!(
+                $expected.cargo,
+                $actual.cargo,
+                epsilon = 0.01
+            );
         };
     }
 
-    pub static SENSOR_STATS: Lazy<Sensor> = Lazy::new(|| Sensor::new(50.0, 200, 32.0, 5));
-    pub static FITTING_STATS: Lazy<Fitting> = Lazy::new(|| Fitting::new(250.0, 250.0, 400, 375.0));
+    pub static SENSOR_STATS: Lazy<Sensor> =
+        Lazy::new(|| Sensor::new(50.0, 200, 32.0, 5));
+    pub static FITTING_STATS: Lazy<Fitting> =
+        Lazy::new(|| Fitting::new(250.0, 250.0, 400, 375.0));
     mod stat_modifications_are_of_the_types {
         use crate::stats::fitting::*;
         use crate::stats::sensor::*;

@@ -27,7 +27,9 @@ fn impl_stat_macro(ast: &syn::DeriveInput) -> TokenStream {
                     )
                 })
                 .collect::<Vec<(String, String)>>(),
-            Fields::Unnamed(_) => panic!("cant derive Stat with unnamed fields"),
+            Fields::Unnamed(_) => {
+                panic!("cant derive Stat with unnamed fields")
+            }
             Fields::Unit => panic!("cant derive Stat with unit fields"),
         },
         Data::Enum(_) => panic!("cant derive Stat enums"),
@@ -39,14 +41,18 @@ fn impl_stat_macro(ast: &syn::DeriveInput) -> TokenStream {
     let mod_fields = types
         .iter()
         .enumerate()
-        .map(|(i, (name, _))| format!("pub {}: crate::stats::ModificationType<_{}>,", name, i))
+        .map(|(i, (name, _))| {
+            format!("pub {}: crate::stats::ModificationType<_{}>,", name, i)
+        })
         .collect::<String>()
         .parse::<proc_macro2::TokenStream>()
         .unwrap();
     let new_arg_list = types
         .iter()
         .enumerate()
-        .map(|(i, (name, _))| format!("{}: crate::stats::ModificationType<_{}>,", name, i))
+        .map(|(i, (name, _))| {
+            format!("{}: crate::stats::ModificationType<_{}>,", name, i)
+        })
         .collect::<String>()
         .parse::<proc_macro2::TokenStream>()
         .unwrap();

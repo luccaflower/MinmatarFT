@@ -27,6 +27,8 @@ where
             })
             .collect::<Vec<String>>()
             .join(",");
-        tokens.extend(TokenStream::from_str(format!("[{}]", inner).as_str()).unwrap())
+        tokens.extend(
+            TokenStream::from_str(format!("[{}]", inner).as_str()).unwrap(),
+        )
     }
 }

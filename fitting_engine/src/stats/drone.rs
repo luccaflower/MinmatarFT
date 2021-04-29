@@ -11,7 +11,12 @@ pub struct Drone {
 }
 
 impl Drone {
-    pub fn new(control_range: u32, capacity: u16, bandwidth: u16, max_drones: u8) -> Self {
+    pub fn new(
+        control_range: u32,
+        capacity: u16,
+        bandwidth: u16,
+        max_drones: u8,
+    ) -> Self {
         Self {
             control_range,
             capacity,

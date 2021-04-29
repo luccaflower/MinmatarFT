@@ -56,11 +56,16 @@ impl SdeProvider<'_> {
                     Cursor::new(buffer)
                 }
 
-                let type_ids = into(zip.by_name("sde/fsd/typeIDs.yaml").unwrap());
-                let group_ids = into(zip.by_name("sde/fsd/groupIDs.yaml").unwrap());
-                let category_ids = into(zip.by_name("sde/fsd/categoryIDs.yaml").unwrap());
-                let dogma_attributes = into(zip.by_name("sde/fsd/dogmaAttributes.yaml").unwrap());
-                let type_dogma = into(zip.by_name("sde/fsd/typeDogma.yaml").unwrap());
+                let type_ids =
+                    into(zip.by_name("sde/fsd/typeIDs.yaml").unwrap());
+                let group_ids =
+                    into(zip.by_name("sde/fsd/groupIDs.yaml").unwrap());
+                let category_ids =
+                    into(zip.by_name("sde/fsd/categoryIDs.yaml").unwrap());
+                let dogma_attributes =
+                    into(zip.by_name("sde/fsd/dogmaAttributes.yaml").unwrap());
+                let type_dogma =
+                    into(zip.by_name("sde/fsd/typeDogma.yaml").unwrap());
                 ParserArgument::new(
                     type_ids,
                     group_ids,
@@ -84,7 +89,9 @@ impl SdeProvider<'_> {
                 }
                 let extract_dir = dir.join("sde");
                 if !extract_dir.exists() {
-                    let mut archive = zip::ZipArchive::new(File::open(&zip_path).unwrap()).unwrap();
+                    let mut archive =
+                        zip::ZipArchive::new(File::open(&zip_path).unwrap())
+                            .unwrap();
                     for i in 0..archive.len() {
                         let mut file = archive.by_index(i).unwrap();
                         let outpath = match file.enclosed_name() {
@@ -92,27 +99,47 @@ impl SdeProvider<'_> {
                             None => continue,
                         };
 
-                        let outpath = current_dir().unwrap().join(&dir).join(outpath);
+                        let outpath =
+                            current_dir().unwrap().join(&dir).join(outpath);
                         if (&*file.name()).ends_with('/') {
                             fs::create_dir_all(&outpath).unwrap();
                         } else {
                             if let Some(p) = outpath.parent() {
-                                let p = current_dir().unwrap().join(&dir).join(p);
+                                let p =
+                                    current_dir().unwrap().join(&dir).join(p);
                                 if !p.exists() {
                                     fs::create_dir_all(&p).unwrap();
                                 }
                             }
-                            let mut outfile = fs::File::create(&outpath).unwrap();
+                            let mut outfile =
+                                fs::File::create(&outpath).unwrap();
                             io::copy(&mut file, &mut outfile).unwrap();
                         }
                     }
                 }
                 ParserArgument::new(
-                    File::open(dir.join("sde").join("fsd").join("typeIDs.yaml")).unwrap(),
-                    File::open(dir.join("sde").join("fsd").join("groupIDs.yaml")).unwrap(),
-                    File::open(dir.join("sde").join("fsd").join("categoryIDs.yaml")).unwrap(),
-                    File::open(dir.join("sde").join("fsd").join("dogmaAttributes.yaml")).unwrap(),
-                    File::open(dir.join("sde").join("fsd").join("typeDogma.yaml")).unwrap(),
+                    File::open(
+                        dir.join("sde").join("fsd").join("typeIDs.yaml"),
+                    )
+                    .unwrap(),
+                    File::open(
+                        dir.join("sde").join("fsd").join("groupIDs.yaml"),
+                    )
+                    .unwrap(),
+                    File::open(
+                        dir.join("sde").join("fsd").join("categoryIDs.yaml"),
+                    )
+                    .unwrap(),
+                    File::open(
+                        dir.join("sde")
+                            .join("fsd")
+                            .join("dogmaAttributes.yaml"),
+                    )
+                    .unwrap(),
+                    File::open(
+                        dir.join("sde").join("fsd").join("typeDogma.yaml"),
+                    )
+                    .unwrap(),
                 )
                 .into()
             }

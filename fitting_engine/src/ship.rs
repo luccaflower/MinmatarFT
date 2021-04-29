@@ -1,8 +1,8 @@
 use crate::faction::Faction;
 use crate::ship_type::ShipType;
 use crate::stats::{
-    capacitor::Capacitor, defense::Defense, drone::Drone, fitting::Fitting, movement::Movement,
-    sensor::Sensor,
+    capacitor::Capacitor, defense::Defense, drone::Drone, fitting::Fitting,
+    movement::Movement, sensor::Sensor,
 };
 use serde::{Deserialize, Serialize};
 use std::borrow::Cow;

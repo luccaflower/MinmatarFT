@@ -1,5 +1,6 @@
 use crate::static_module::{
-    CapacitorMod, DefenseMod, DroneMod, FittingMod, MovementMod, SensorMod, StaticModule,
+    CapacitorMod, DefenseMod, DroneMod, FittingMod, MovementMod, SensorMod,
+    StaticModule,
 };
 
 #[derive(Debug, Clone)]

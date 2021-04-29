@@ -6,7 +6,14 @@ use crate::stats::movement::Movement;
 use crate::stats::sensor::Sensor;
 
 #[derive(Debug, Clone)]
-pub struct FitStats {}
+pub struct FitStats {
+    pub fitting: Fitting,
+    pub capacitor: Capacitor,
+    pub defense: Defense,
+    pub movement: Movement,
+    pub sensor: Sensor,
+    pub drone: Drone,
+}
 
 impl FitStats {
     pub fn new(
@@ -17,6 +24,13 @@ impl FitStats {
         sensor: Sensor,
         drone: Drone,
     ) -> Self {
-        Self {}
+        Self {
+            fitting,
+            capacitor,
+            defense,
+            movement,
+            sensor,
+            drone,
+        }
     }
 }

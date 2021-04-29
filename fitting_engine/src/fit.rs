@@ -60,7 +60,10 @@ impl<'a> Fit<'a> {
         false
     }
 
-    fn convert_slot(&'a self, slots: &'a [Option<ModuleInstance<'a>>]) -> Vec<String> {
+    fn convert_slot(
+        &'a self,
+        slots: &'a [Option<ModuleInstance<'a>>],
+    ) -> Vec<String> {
         slots
             .iter()
             .filter(|x| x.is_some())
@@ -93,7 +96,8 @@ impl<'a> Fit<'a> {
                     mut drone_vec,
                 ),
                  x| {
-                    let (fitting, capacitor, defense, movement, sensor, drone) = x.modifications();
+                    let (fitting, capacitor, defense, movement, sensor, drone) =
+                        x.modifications();
                     maybe_push(&mut fitting_vec, fitting);
                     maybe_push(&mut capacitor_vec, capacitor);
                     maybe_push(&mut defense_vec, defense);
@@ -174,16 +178,21 @@ impl<'a> CompressedFit<'a> {
             Some(
                 names
                     .iter()
-                    .map(|x| modules.get(x.deref()).map(|x| ModuleInstance::new(x)))
+                    .map(|x| {
+                        modules.get(x.deref()).map(|x| ModuleInstance::new(x))
+                    })
                     .chain((0..nones_to_add).map(|_| None))
                     .collect::<Vec<Option<ModuleInstance>>>()
                     .into_boxed_slice(),
             )
         }
         let ship = ships.get(self.ship.deref())?;
-        let high_slots = create_module_lists(&self.high_slots, ship.high_slots, modules)?;
-        let med_slots = create_module_lists(&self.med_slots, ship.med_slots, modules)?;
-        let low_slots = create_module_lists(&self.low_slots, ship.low_slots, modules)?;
+        let high_slots =
+            create_module_lists(&self.high_slots, ship.high_slots, modules)?;
+        let med_slots =
+            create_module_lists(&self.med_slots, ship.med_slots, modules)?;
+        let low_slots =
+            create_module_lists(&self.low_slots, ship.low_slots, modules)?;
         Some(Fit {
             ship,
             high_slots,
@@ -191,15 +200,4 @@ impl<'a> CompressedFit<'a> {
             low_slots,
         })
     }
-}
-
-#[cfg(test)]
-mod tests {
-    mod any_fit {
-        fn has_a_slot_layout_matching_its_associated_ship() {}
-    }
-
-    mod an_empty_fit {}
-
-    mod a_nonempty_fit {}
 }
