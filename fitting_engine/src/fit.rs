@@ -73,6 +73,16 @@ impl<'a> Fit<'a> {
         false
     }
 
+    pub fn remove_module(&mut self, slot: ModuleSlot, index: usize) {
+        let modules = match &slot {
+            ModuleSlot::High => &mut self.high_slots, 
+            ModuleSlot::Med => &mut self.med_slots,
+            ModuleSlot::Low => &mut self.low_slots,
+            ModuleSlot::Rig => unimplemented!(),
+        };
+        modules[index] = None
+    }
+
     fn convert_slot(
         &'a self,
         slots: &'a [Option<ModuleInstance<'a>>],
@@ -84,6 +94,7 @@ impl<'a> Fit<'a> {
             .map(|x| x.inner_module.name.to_string())
             .collect()
     }
+
     pub fn calculate_stats(&self) -> FitStats {
         fn maybe_push<'a, T>(v: &mut Vec<&'a T>, val: &'a Option<T>) {
             let val = val.as_ref();

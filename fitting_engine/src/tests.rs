@@ -15,6 +15,7 @@ use crate::{
     stats::ModificationType,
 };
 use once_cell::sync::Lazy;
+#[allow(unused)]
 use std::borrow::Cow;
 
 #[allow(unused)]
@@ -44,7 +45,7 @@ pub static SHIP: Lazy<Ship> = Lazy::new(|| {
 });
 
 #[allow(unused)]
-pub static MODULE_A: Lazy<StaticModule> = Lazy::new(|| {
+pub static MICROWARPDRIVE: Lazy<StaticModule> = Lazy::new(|| {
     StaticModule::new(
         "5MN Microwarpdrive",
         None,
@@ -75,6 +76,16 @@ mod any_fit {
         assert_eq!(fit.med_slots.len(), SHIP.med_slots as usize);
         assert_eq!(fit.low_slots.len(), SHIP.low_slots as usize);
     }
+
+    #[test]
+    fn can_add_a_new_module_to_an_empty_slot() {
+        let mut fit = Fit::new(Cow::Borrowed(""), &SHIP);
+        fit.add_module(&MICROWARPDRIVE);
+        assert!(fit.med_slots.iter().any(|module| module
+            .as_ref()
+            .filter(|x| x.inner_module.name == MICROWARPDRIVE.name)
+            .is_some()));
+    }
 }
 
 #[cfg(test)]
@@ -88,6 +99,18 @@ mod an_empty_fit {
 }
 
 #[cfg(test)]
+mod a_non_empty_fit {
+    use super::*;
+    #[test]
+    fn can_remove_a_module() {
+        let mut fit = Fit::new(Cow::Borrowed(""), &SHIP);
+        fit.add_module(&MICROWARPDRIVE);
+        fit.remove_module(ModuleSlot::Med, 0);
+        assert!(!fit.med_slots.iter().any(|x| x.is_some()));
+    }
+}
+
+#[cfg(test)]
 mod fit_compression {
     use std::{collections::HashMap, ops::Deref};
 
@@ -97,7 +120,7 @@ mod fit_compression {
     #[test]
     fn compresses_into_names_only() {
         let mut ship = Fit::new(Cow::Owned("aaa".to_string()), SHIP.deref());
-        ship.add_module(MODULE_A.deref());
+        ship.add_module(MICROWARPDRIVE.deref());
         let CompressedFit {
             name,
             ship,
@@ -107,7 +130,10 @@ mod fit_compression {
         } = ship.compress();
         assert_eq!("aaa", name.to_string());
         assert_eq!("Caracal", ship.to_string());
-        assert_eq!("5MN Microwarpdrive", med_slots.pop().unwrap());
+        assert_eq!(
+            "5MN Microwarpdrive",
+            med_slots.pop().unwrap_or(Cow::Borrowed("Nothing"))
+        );
         assert!(high_slots.is_empty());
         assert!(med_slots.is_empty());
         assert!(low_slots.is_empty());
@@ -123,7 +149,10 @@ mod fit_compression {
         let mut ships = HashMap::new();
         ships.insert(SHIP.name.deref(), SHIP.deref().clone());
         let mut modules = HashMap::new();
-        modules.insert(MODULE_A.name.deref(), MODULE_A.deref().clone());
+        modules.insert(
+            MICROWARPDRIVE.name.deref(),
+            MICROWARPDRIVE.deref().clone(),
+        );
         let fit = compressed_fit.decompress(&ships, &modules).unwrap();
         assert!(fit.ship.clone().eq(SHIP.deref()));
         assert!(fit.med_slots[0]
@@ -131,6 +160,6 @@ mod fit_compression {
             .unwrap()
             .inner_module
             .clone()
-            .eq(MODULE_A.deref()))
+            .eq(MICROWARPDRIVE.deref()))
     }
 }
