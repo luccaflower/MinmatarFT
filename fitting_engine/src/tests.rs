@@ -1,4 +1,3 @@
-#[allow(unused)]
 use crate::fit::Fit;
 use crate::ship::{RigSize, SensorStrengthType, Ship};
 use crate::ship_type::cruiser::CruiserType;
@@ -15,10 +14,8 @@ use crate::{
     stats::ModificationType,
 };
 use once_cell::sync::Lazy;
-#[allow(unused)]
 use std::borrow::Cow;
 
-#[allow(unused)]
 pub static SHIP: Lazy<Ship> = Lazy::new(|| {
     Ship::new(
         "Caracal",
@@ -44,7 +41,6 @@ pub static SHIP: Lazy<Ship> = Lazy::new(|| {
     )
 });
 
-#[allow(unused)]
 pub static MICROWARPDRIVE: Lazy<StaticModule> = Lazy::new(|| {
     StaticModule::new(
         "5MN Microwarpdrive",
@@ -66,7 +62,7 @@ pub static MICROWARPDRIVE: Lazy<StaticModule> = Lazy::new(|| {
         None,
     )
 });
-#[cfg(test)]
+
 mod any_fit {
     use super::*;
     #[test]
@@ -88,7 +84,6 @@ mod any_fit {
     }
 }
 
-#[cfg(test)]
 mod an_empty_fit {
     use super::*;
     #[test]
@@ -98,7 +93,6 @@ mod an_empty_fit {
     }
 }
 
-#[cfg(test)]
 mod a_non_empty_fit {
     use super::*;
     #[test]
@@ -110,7 +104,6 @@ mod a_non_empty_fit {
     }
 }
 
-#[cfg(test)]
 mod fit_compression {
     use std::{collections::HashMap, ops::Deref};
 
