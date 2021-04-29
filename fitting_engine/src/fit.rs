@@ -48,7 +48,13 @@ impl<'a> Fit<'a> {
         let med_slots = self.convert_slot(self.med_slots.deref());
         let low_slots = self.convert_slot(self.low_slots.deref());
         let Fit { name, ship, .. } = self;
-        CompressedFit::new(name, ship.name.deref(), high_slots, med_slots, low_slots)
+        CompressedFit::new(
+            name,
+            ship.name.deref(),
+            high_slots,
+            med_slots,
+            low_slots,
+        )
     }
 
     pub fn add_module(&mut self, module: &'a StaticModule<'a>) -> bool {

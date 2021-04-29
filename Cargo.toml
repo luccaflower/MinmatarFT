@@ -1,7 +1,7 @@
 [package]
 name = "minmatar_ft"
 version = "0.1.0"
-authors = ["Lucca Kaasgaard Christiansen <rkaasgaard@gmail.com>"]
+authors = ["Lucca Kaasgaard Christiansen <1078059@ucn.dk>", "Alexandra Østermark <alex.cramt@gmail.com>"]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -11,4 +11,4 @@ fitting_engine = {path= "fitting_engine" }
 sde_parser = {path="sde_parser"}
 
 [workspace]
-members = ["fitting_engine", "static_data_macros", "static_data", "sde_parser", "sde_provider", "fitting_engine_macros", "web"]
+members = ["fitting_engine", "static_data_macros", "static_data", "sde_parser", "sde_provider", "fitting_engine_macros", "web/wasm_export", "fitting_engine_ts_gen"]

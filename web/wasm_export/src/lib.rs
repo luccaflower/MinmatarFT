@@ -1,6 +1,8 @@
 pub mod manual_memory;
 
-use crate::manual_memory::{create_pointer, drop_pointer, use_pointer, use_pointer_mut};
+use crate::manual_memory::{
+    create_pointer, drop_pointer, use_pointer, use_pointer_mut,
+};
 use fitting_engine::fit::Fit;
 use fitting_engine::ship::Ship;
 use js_sys::Array;
@@ -56,8 +58,10 @@ pub fn get_name_fit(fit: u64) -> String {
 #[wasm_bindgen]
 pub fn fetch_ship_by_name(name: String) -> JsValue {
     fn inner(name: String) -> Option<JsValue> {
-        let json =
-            serde_json::to_string(static_data::get_all().iter().find(|x| x.name == name)?).ok()?;
+        let json = serde_json::to_string(
+            static_data::get_all().iter().find(|x| x.name == name)?,
+        )
+        .ok()?;
         Some(js_sys::JSON::parse(json.as_str()).ok()?)
     }
     inner(name).unwrap_or(JsValue::null())
