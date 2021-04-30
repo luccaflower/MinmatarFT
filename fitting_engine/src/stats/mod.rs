@@ -74,6 +74,24 @@ impl Default for ModificationType<u64> {
     }
 }
 
+impl Default for ModificationType<f64> {
+    fn default() -> Self {
+        Self::Additive(0f64)
+    }
+}
+
+impl Default for ModificationType<u16> {
+    fn default() -> Self {
+        Self::Additive(0u16)
+    }
+}
+
+impl Default for ModificationType<f32> {
+    fn default() -> Self {
+        Self::Additive(0f32)
+    }
+}
+
 impl<T> PartialEq for ModificationType<T>
 where
     T: NumOps + PartialEq + PartialOrd,

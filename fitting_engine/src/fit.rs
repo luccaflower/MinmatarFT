@@ -75,7 +75,7 @@ impl<'a> Fit<'a> {
 
     pub fn remove_module(&mut self, slot: ModuleSlot, index: usize) {
         let modules = match &slot {
-            ModuleSlot::High => &mut self.high_slots, 
+            ModuleSlot::High => &mut self.high_slots,
             ModuleSlot::Med => &mut self.med_slots,
             ModuleSlot::Low => &mut self.low_slots,
             ModuleSlot::Rig => unimplemented!(),

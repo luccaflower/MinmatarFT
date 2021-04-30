@@ -32,15 +32,15 @@ pub fn generate_all_data(_: TokenStream) -> TokenStream {
                 .cached(static_dir.to_string_lossy())
                 .execute(),
         );
-        let result = sde_parser::parse(args).unwrap();
+        let (ships, _modules) = sde_parser::parse(args).unwrap();
         let mut file = File::create(json_dir.join("ships.json")).unwrap();
         let json = serde_json::to_string(
-            &result.iter().map(|(_, x)| x).collect::<Vec<&Ship>>(),
+            &ships.iter().map(|(_, x)| x).collect::<Vec<&Ship>>(),
         )
         .unwrap();
         file.write_all(json.as_bytes()).unwrap();
         file.flush().unwrap();
-        result
+        ships
             .into_iter()
             .map(|(_, x)| x)
             .collect::<Vec<Ship>>()

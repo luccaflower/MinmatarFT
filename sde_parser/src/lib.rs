@@ -6,15 +6,26 @@ use crate::model::type_dogma::TypeDogma;
 use crate::model::type_id::TypeId;
 use crate::ship_type_ids::ship_type_by_id;
 use fitting_engine::faction::Faction;
+use fitting_engine::fit::Modules;
 use fitting_engine::ship::{RigSize, SensorStrengthType, Ship};
+use fitting_engine::static_module::{FittingMod, ModuleSlot, StaticModule};
 use fitting_engine::stats::capacitor::Capacitor;
+use fitting_engine::stats::capacitor::CapacitorModifications;
 use fitting_engine::stats::defense::Defense;
+use fitting_engine::stats::defense::DefenseModifications;
 use fitting_engine::stats::drone::Drone;
+use fitting_engine::stats::drone::DroneModifications;
 use fitting_engine::stats::fitting::Fitting;
+use fitting_engine::stats::fitting::FittingModifications;
 use fitting_engine::stats::movement::Movement;
+use fitting_engine::stats::movement::MovementModifications;
 use fitting_engine::stats::sensor::Sensor;
+use fitting_engine::stats::sensor::SensorModifications;
+use fitting_engine::stats::ModificationType;
 use std::collections::HashMap;
+use std::fs::File;
 use std::io;
+use std::io::Write;
 
 mod faction_ids;
 pub mod model;
@@ -69,7 +80,8 @@ pub type InputSdeData = (
     HashMap<u64, TypeDogma>,
 );
 
-pub type OutputSdeData<'a> = (HashMap<String, Ship<'a>>);
+pub type OutputSdeData<'a> =
+    (HashMap<String, Ship<'a>>, HashMap<String, StaticModule<'a>>);
 
 impl<A, B, C, D, E> Into<InputSdeData> for ParserArgument<A, B, C, D, E>
 where
@@ -118,7 +130,7 @@ pub fn parse<'a, T: Into<InputSdeData>>(
 ) -> Result<OutputSdeData<'a>, Box<dyn std::error::Error>> {
     let (type_ids, group_ids, category_ids, dogma_attributes, type_dogmas) =
         input.into();
-    let (ships, _rest_data): (
+    let (ships, rest_data): (
         Vec<(
             TypeId,
             &GroupId,
@@ -158,6 +170,89 @@ pub fn parse<'a, T: Into<InputSdeData>>(
         .partition(|(_, _, c, _)| {
             c.name.en.as_ref() == Some(&"Ship".to_string())
         });
+    let (modules, _rest_data): (
+        Vec<(
+            TypeId,
+            &GroupId,
+            &CategoryId,
+            HashMap<u64, (f64, &DogmaAttribute)>,
+        )>,
+        Vec<(
+            TypeId,
+            &GroupId,
+            &CategoryId,
+            HashMap<u64, (f64, &DogmaAttribute)>,
+        )>,
+    ) = rest_data.into_iter().partition(|(_, _, c, _)| {
+        c.name.en.as_ref() == Some(&"Module".to_string())
+    });
+    let module_map = modules
+        .into_iter()
+        .map(|(t, g, c, v)| {
+            let pg = v
+                .get(&549)
+                .map(|(x, _)| ModificationType::Additive(*x))
+                .unwrap_or(
+                    v.get(&145)
+                        .map(|(x, _)| ModificationType::Multiplicative(*x))
+                        .unwrap_or(
+                            v.get(&30)
+                                .map(|(x, _)| ModificationType::FittingCost(*x))
+                                .unwrap_or(ModificationType::default()),
+                        ),
+                );
+            let cpu = v
+                .get(&202)
+                .map(|(x, _)| ModificationType::Multiplicative(*x))
+                .unwrap_or(
+                    v.get(&50)
+                        .map(|(x, _)| ModificationType::FittingCost(*x))
+                        .unwrap_or(ModificationType::default()),
+                );
+            let calibration = v
+                .get(&1153)
+                .map(|(x, _)| ModificationType::FittingCost(*x as u16))
+                .unwrap_or(ModificationType::default());
+            let cargo = v
+                .get(&614)
+                .map(|(x, _)| ModificationType::Additive(*x as f32))
+                .unwrap_or(
+                    v.get(&149)
+                        .map(|(x, _)| {
+                            ModificationType::Multiplicative(*x as f32)
+                        })
+                        .unwrap_or(ModificationType::default()),
+                );
+            let fitting =
+                FittingModifications::new(cpu, pg, calibration, cargo);
+
+            let capacitor_amount = v
+                .get(&67)
+                .map(|(x, _)| ModificationType::Additive(*x))
+                .unwrap_or(
+                    v.get(&147)
+                        .map(|(x, _)| ModificationType::Multiplicative(*x))
+                        .unwrap_or(ModificationType::default()),
+                );
+            let neut_resistance = v.get(&2267);
+
+            StaticModule::new(
+                "",
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                ModuleSlot::High,
+                None,
+            )
+        })
+        .map(|x| (x.name.to_string(), x))
+        .collect();
     let ship_map = ships
         .into_iter()
         .map(|(t, g, c, v)| {
@@ -306,5 +401,5 @@ pub fn parse<'a, T: Into<InputSdeData>>(
         })
         .map(|x| (x.name.to_string(), x))
         .collect();
-    Ok(ship_map)
+    Ok((ship_map, module_map))
 }
