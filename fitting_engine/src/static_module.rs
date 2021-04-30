@@ -7,31 +7,12 @@ use crate::stats::sensor::SensorModifications;
 use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
 
-pub type FittingMod = Option<FittingModifications<f64, f64, u16, f32>>;
-pub type CapacitorMod = Option<CapacitorModifications<f64, f64, f64>>;
-pub type DefenseMod = Option<
-    DefenseModifications<
-        f64,
-        f64,
-        f64,
-        f64,
-        f64,
-        f64,
-        f64,
-        f64,
-        f64,
-        f64,
-        f64,
-        f64,
-        f64,
-        f64,
-        f64,
-        f64,
-    >,
->;
-pub type MovementMod = Option<MovementModifications<f64, f64, f64, f64>>;
-pub type SensorMod = Option<SensorModifications<f64, f64, f64, u8>>;
-pub type DroneMod = Option<DroneModifications<u32, u16, u16, u8>>;
+pub type FittingMod = Option<FittingModifications>;
+pub type CapacitorMod = Option<CapacitorModifications>;
+pub type DefenseMod = Option<DefenseModifications>;
+pub type MovementMod = Option<MovementModifications>;
+pub type SensorMod = Option<SensorModifications>;
+pub type DroneMod = Option<DroneModifications>;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct StaticModule<'a> {

@@ -8,17 +8,17 @@ use ts_rs::TS;
 #[cfg_attr(feature = "ts", derive(TS))]
 pub struct Movement {
     pub max_velocity: f64,
-    pub agility: f32,
-    pub mass: u64,
-    pub warp_speed: f32,
+    pub agility: f64,
+    pub mass: f64,
+    pub warp_speed: f64,
 }
 
 impl Movement {
     pub fn new(
         max_velocity: f64,
-        agility: f32,
-        mass: u64,
-        warp_speed: f32,
+        agility: f64,
+        mass: f64,
+        warp_speed: f64,
     ) -> Self {
         Self {
             max_velocity,

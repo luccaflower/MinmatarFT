@@ -40,18 +40,16 @@ fn impl_stat_macro(ast: &syn::DeriveInput) -> TokenStream {
         .unwrap();
     let mod_fields = types
         .iter()
-        .enumerate()
-        .map(|(i, (name, _))| {
-            format!("pub {}: crate::stats::ModificationType<_{}>,", name, i)
+        .map(|(name, tt)| {
+            format!("pub {}: crate::stats::ModificationType<{}>,", name, tt)
         })
         .collect::<String>()
         .parse::<proc_macro2::TokenStream>()
         .unwrap();
     let new_arg_list = types
         .iter()
-        .enumerate()
-        .map(|(i, (name, _))| {
-            format!("{}: crate::stats::ModificationType<_{}>,", name, i)
+        .map(|(name, tt)| {
+            format!("{}: crate::stats::ModificationType<{}>,", name, tt)
         })
         .collect::<String>()
         .parse::<proc_macro2::TokenStream>()
@@ -114,53 +112,23 @@ fn impl_stat_macro(ast: &syn::DeriveInput) -> TokenStream {
         .collect::<String>()
         .parse::<proc_macro2::TokenStream>()
         .unwrap();
-    let generic_list = types
-        .iter()
-        .enumerate()
-        .map(|(i, _)| format!("_{},", i))
-        .collect::<String>()
-        .parse::<proc_macro2::TokenStream>()
-        .unwrap();
-    let where_clause = types
-        .iter()
-        .enumerate()
-        .map(|(i, (_, tt))| {
-            format!(
-                r"
-        {0}: num_traits::cast::AsPrimitive<_{1}>,
-        _{1}: num_traits::NumOps
-        + PartialEq
-        + PartialOrd
-        + Clone
-        + num_traits::Zero
-        + num_traits::cast::AsPrimitive<{0}>,
-        ",
-                tt, i
-            )
-        })
-        .collect::<String>()
-        .parse::<proc_macro2::TokenStream>()
-        .unwrap();
     let gen = quote! {
         #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-        pub struct #mod_name<#generic_list> where #where_clause {
+        pub struct #mod_name {
             #mod_fields
         }
 
-        impl<#generic_list> #mod_name<#generic_list> where #where_clause {
+        impl #mod_name {
             pub fn new(#new_arg_list) -> Self {
                 Self {#self_arg_list}
             }
         }
 
-        impl<#generic_list> Stat<#mod_name<#generic_list>> for #name where #where_clause {
-            fn apply(&self, stat_mods: Vec<&#mod_name<#generic_list>>) -> Self {
-                fn calculate<T, V>(base_val: T, mut additions: Vec<&crate::stats::ModificationType<V>>) -> T
+        impl Stat<#mod_name> for #name {
+            fn apply(&self, stat_mods: Vec<&#mod_name>) -> Self {
+                fn calculate<T>(base_val: T, mut additions: Vec<&crate::stats::ModificationType<T>>) -> T
                 where
-                    T: num_traits::cast::AsPrimitive<V>,
-                    V: num_traits::cast::AsPrimitive<T>,
-                    T: num_traits::NumOps + PartialEq + PartialOrd + Clone + num_traits::Zero,
-                    V: num_traits::NumOps + PartialEq + PartialOrd + Clone + num_traits::Zero,
+                    T: funty::IsNumber
                 {
                     additions.sort_by(|a,b|b.partial_cmp(a).unwrap());
                     additions.into_iter().fold(base_val, |acc, x| x.apply(acc))
@@ -172,5 +140,6 @@ fn impl_stat_macro(ast: &syn::DeriveInput) -> TokenStream {
             }
         }
     };
+    //panic!("{}", gen.to_string());
     gen.into()
 }

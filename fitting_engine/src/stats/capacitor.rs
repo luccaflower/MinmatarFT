@@ -8,15 +8,15 @@ use ts_rs::TS;
 #[cfg_attr(feature = "ts", derive(TS))]
 pub struct Capacitor {
     pub capacitor_amount: f64,
-    pub capacitor_recharge_time: u64,
-    pub neut_resistance: f32,
+    pub capacitor_recharge_time: f64,
+    pub neut_resistance: f64,
 }
 
 impl Capacitor {
     pub fn new(
         capacitor_amount: f64,
-        capacitor_recharge_time: u64,
-        neut_resistance: f32,
+        capacitor_recharge_time: f64,
+        neut_resistance: f64,
     ) -> Self {
         Self {
             capacitor_amount,

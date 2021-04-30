@@ -45,7 +45,7 @@ mod tests {
     }
 
     pub static SENSOR_STATS: Lazy<Sensor> =
-        Lazy::new(|| Sensor::new(50.0, 200, 32.0, 5));
+        Lazy::new(|| Sensor::new(50.0, 200.0, 32.0, 5));
     pub static FITTING_STATS: Lazy<Fitting> =
         Lazy::new(|| Fitting::new(250.0, 250.0, 400, 375.0));
     mod stat_modifications_are_of_the_types {
@@ -59,11 +59,11 @@ mod tests {
         fn additive() {
             let modification = SensorModifications::new(
                 ModificationType::default(),
-                ModificationType::Additive(50),
+                ModificationType::Additive(50.0),
                 ModificationType::default(),
                 ModificationType::default(),
             );
-            let expected = Sensor::new(50.0, 250, 32.0, 5);
+            let expected = Sensor::new(50.0, 250.0, 32.0, 5);
             let actual = SENSOR_STATS.apply(vec![&modification]);
             assert_sensor_eq!(expected, actual);
         }
@@ -76,7 +76,7 @@ mod tests {
                 ModificationType::default(),
                 ModificationType::default(),
             );
-            let expected = Sensor::new(50.0, 240, 32.0, 5);
+            let expected = Sensor::new(50.0, 240.0, 32.0, 5);
             let actual = SENSOR_STATS.apply(vec![&modification]);
             assert_sensor_eq!(expected, actual);
         }
@@ -104,18 +104,18 @@ mod tests {
         #[test]
         fn additive_before_multiplicative() {
             let mod_add = SensorModifications::new(
-                ModificationType::Additive(50),
+                ModificationType::Additive(50.0),
                 ModificationType::default(),
                 ModificationType::default(),
                 ModificationType::default(),
             );
             let mod_multi = SensorModifications::new(
-                ModificationType::Multiplicative(2),
+                ModificationType::Multiplicative(2.0),
                 ModificationType::default(),
                 ModificationType::default(),
                 ModificationType::default(),
             );
-            let expected = Sensor::new(200.0, 200, 32.0, 5);
+            let expected = Sensor::new(200.0, 200.0, 32.0, 5);
             let actual = SENSOR_STATS.apply(vec![&mod_multi, &mod_add]);
             assert_sensor_eq!(expected, actual);
         }

@@ -7,17 +7,17 @@ use ts_rs::TS;
 #[derive(Debug, Clone, Serialize, Stat, Deserialize, PartialEq)]
 #[cfg_attr(feature = "ts", derive(TS))]
 pub struct Sensor {
-    pub targeting_range: f32,
-    pub scan_res: u16,
-    pub sensor_strength: f32,
+    pub targeting_range: f64,
+    pub scan_res: f64,
+    pub sensor_strength: f64,
     pub max_locked_targets: u8,
 }
 
 impl Sensor {
     pub fn new(
-        targeting_range: f32,
-        scan_res: u16,
-        sensor_strength: f32,
+        targeting_range: f64,
+        scan_res: f64,
+        sensor_strength: f64,
         max_locked_targets: u8,
     ) -> Self {
         Self {

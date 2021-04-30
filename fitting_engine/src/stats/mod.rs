@@ -1,7 +1,8 @@
-use num_traits::{AsPrimitive, NumOps};
+use funty::IsNumber;
 use serde::{Deserialize, Serialize};
 use std::cmp::Ordering;
 use std::ops::Deref;
+
 pub mod capacitor;
 pub mod defense;
 pub mod drone;
@@ -17,7 +18,7 @@ pub trait Stat<Input> {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ModificationType<T>
 where
-    T: NumOps + PartialEq + PartialOrd,
+    T: IsNumber,
 {
     Multiplicative(T),
     Additive(T),
@@ -26,7 +27,7 @@ where
 
 impl<T> ModificationType<T>
 where
-    T: NumOps + PartialEq + PartialOrd,
+    T: IsNumber,
 {
     pub fn additive(&self) -> bool {
         match self {
@@ -52,49 +53,27 @@ where
         }
     }
 
-    pub fn apply<'a, V: AsPrimitive<T>>(&self, val: V) -> V
-    where
-        T: Copy,
-        T: Clone,
-        T: 'a,
-        T: AsPrimitive<V>,
-    {
+    pub fn apply(&self, val: T) -> T {
         match self {
-            ModificationType::Multiplicative(x) => val.as_().mul(*x),
-            ModificationType::Additive(x) => val.as_().add(*x),
-            ModificationType::FittingCost(x) => val.as_().sub(*x),
+            ModificationType::Multiplicative(x) => val.mul(*x),
+            ModificationType::Additive(x) => val.add(*x),
+            ModificationType::FittingCost(x) => val.sub(*x),
         }
-        .as_()
     }
 }
 
-impl Default for ModificationType<u64> {
+impl<T> Default for ModificationType<T>
+where
+    T: IsNumber,
+{
     fn default() -> Self {
-        Self::Additive(0u64)
-    }
-}
-
-impl Default for ModificationType<f64> {
-    fn default() -> Self {
-        Self::Additive(0f64)
-    }
-}
-
-impl Default for ModificationType<u16> {
-    fn default() -> Self {
-        Self::Additive(0u16)
-    }
-}
-
-impl Default for ModificationType<f32> {
-    fn default() -> Self {
-        Self::Additive(0f32)
+        Self::Additive(T::default())
     }
 }
 
 impl<T> PartialEq for ModificationType<T>
 where
-    T: NumOps + PartialEq + PartialOrd,
+    T: IsNumber,
 {
     fn eq(&self, other: &Self) -> bool {
         self.additive() == other.additive() && self.deref().eq(other)
@@ -103,7 +82,7 @@ where
 
 impl<T> PartialOrd for ModificationType<T>
 where
-    T: NumOps + PartialEq + PartialOrd,
+    T: IsNumber,
 {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         match (self, other) {
@@ -129,7 +108,7 @@ where
 
 impl<T> Deref for ModificationType<T>
 where
-    T: NumOps + PartialEq + PartialOrd,
+    T: IsNumber,
 {
     type Target = T;
 
