@@ -66,22 +66,29 @@ pub static MICROWARPDRIVE: Lazy<StaticModule> = Lazy::new(|| {
 
 mod any_fit {
     use super::*;
+    use assertable::core::specific_assert::assert_true::AssertTrue;
+
     #[test]
     fn has_a_slot_layout_matching_its_associated_ship() {
         let fit = Fit::new(Cow::Borrowed(""), &SHIP);
-        assert_eq!(fit.high_slots.len(), SHIP.high_slots as usize);
-        assert_eq!(fit.med_slots.len(), SHIP.med_slots as usize);
-        assert_eq!(fit.low_slots.len(), SHIP.low_slots as usize);
+        fit.high_slots.len().assert_eq(&(SHIP.high_slots as usize));
+        fit.med_slots.len().assert_eq(&(SHIP.med_slots as usize));
+        fit.low_slots.len().assert_eq(&(SHIP.low_slots as usize));
     }
 
     #[test]
     fn can_add_a_new_module_to_an_empty_slot() {
         let mut fit = Fit::new(Cow::Borrowed(""), &SHIP);
         fit.add_module(&MICROWARPDRIVE);
-        assert!(fit.med_slots.iter().any(|module| module
-            .as_ref()
-            .filter(|x| x.inner_module.name == MICROWARPDRIVE.name)
-            .is_some()));
+        fit.med_slots
+            .iter()
+            .any(|module| {
+                module
+                    .as_ref()
+                    .filter(|x| x.inner_module.name == MICROWARPDRIVE.name)
+                    .is_some()
+            })
+            .assert_true()
     }
 }
 
@@ -96,12 +103,14 @@ mod an_empty_fit {
 
 mod a_non_empty_fit {
     use super::*;
+    use assertable::core::specific_assert::assert_false::AssertFalse;
+
     #[test]
     fn can_remove_a_module() {
         let mut fit = Fit::new(Cow::Borrowed(""), &SHIP);
         fit.add_module(&MICROWARPDRIVE);
         fit.remove_module(ModuleSlot::Med, 0);
-        assert!(!fit.med_slots.iter().any(|x| x.is_some()));
+        fit.med_slots.iter().any(|x| x.is_some()).assert_false()
     }
 }
 

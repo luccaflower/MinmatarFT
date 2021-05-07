@@ -37,7 +37,7 @@ dependencies = [
 [[package]]
 name = "assertable"
 version = "0.1.0"
-source = "git+https://github.com/cramt/assertable.git?branch=main#0c3abd606ebaf66eec3c07acbe83930dc5fde0d2"
+source = "git+https://github.com/cramt/assertable.git?branch=main#a6f7647f39649577622a166664228cf0a1126917"
 dependencies = [
  "assertable_core",
  "assertable_macro",
@@ -46,7 +46,7 @@ dependencies = [
 [[package]]
 name = "assertable_core"
 version = "0.1.0"
-source = "git+https://github.com/cramt/assertable.git?branch=main#0c3abd606ebaf66eec3c07acbe83930dc5fde0d2"
+source = "git+https://github.com/cramt/assertable.git?branch=main#a6f7647f39649577622a166664228cf0a1126917"
 dependencies = [
  "once_cell",
 ]
@@ -54,7 +54,7 @@ dependencies = [
 [[package]]
 name = "assertable_macro"
 version = "0.1.0"
-source = "git+https://github.com/cramt/assertable.git?branch=main#0c3abd606ebaf66eec3c07acbe83930dc5fde0d2"
+source = "git+https://github.com/cramt/assertable.git?branch=main#a6f7647f39649577622a166664228cf0a1126917"
 dependencies = [
  "quote",
  "syn",
