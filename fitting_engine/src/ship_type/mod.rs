@@ -9,12 +9,13 @@ use crate::ship_type::battleship::BattleshipType;
 use crate::ship_type::cruiser::CruiserType;
 use crate::ship_type::destroyer::DestroyerType;
 use crate::ship_type::frigate::FrigateType;
+use assertable::Assertable;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use std::str::FromStr;
 #[cfg(feature = "ts")]
 use ts_rs::TS;
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Assertable)]
 #[cfg_attr(feature = "ts", derive(TS))]
 pub enum ShipType {
     Frigate(FrigateType),

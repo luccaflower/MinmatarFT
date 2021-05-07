@@ -2,8 +2,9 @@ use crate::static_module::{
     CapacitorMod, DefenseMod, DroneMod, FittingMod, MovementMod, SensorMod,
     StaticModule,
 };
+use assertable::Assertable;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Assertable)]
 pub struct ModuleInstance<'a> {
     pub inner_module: &'a StaticModule<'a>,
     pub state: ModuleInstanceState,
@@ -47,7 +48,7 @@ impl<'a> ModuleInstance<'a> {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Assertable)]
 pub enum ModuleInstanceState {
     Passive,
     Active,

@@ -1,8 +1,9 @@
+use assertable::Assertable;
 use std::str::FromStr;
 #[cfg(feature = "ts")]
 use ts_rs::TS;
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Assertable)]
 #[cfg_attr(feature = "ts", derive(TS))]
 pub enum DestroyerType {
     T1,

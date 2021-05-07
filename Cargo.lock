@@ -35,6 +35,32 @@ dependencies = [
 ]
 
 [[package]]
+name = "assertable"
+version = "0.1.0"
+source = "git+https://github.com/cramt/assertable.git?branch=main#0c3abd606ebaf66eec3c07acbe83930dc5fde0d2"
+dependencies = [
+ "assertable_core",
+ "assertable_macro",
+]
+
+[[package]]
+name = "assertable_core"
+version = "0.1.0"
+source = "git+https://github.com/cramt/assertable.git?branch=main#0c3abd606ebaf66eec3c07acbe83930dc5fde0d2"
+dependencies = [
+ "once_cell",
+]
+
+[[package]]
+name = "assertable_macro"
+version = "0.1.0"
+source = "git+https://github.com/cramt/assertable.git?branch=main#0c3abd606ebaf66eec3c07acbe83930dc5fde0d2"
+dependencies = [
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "async-trait"
 version = "0.1.42"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -165,6 +191,7 @@ name = "fitting_engine"
 version = "0.1.0"
 dependencies = [
  "approx",
+ "assertable",
  "fitting_engine_macros",
  "funty",
  "once_cell",

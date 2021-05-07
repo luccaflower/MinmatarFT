@@ -109,27 +109,20 @@ mod fit_compression {
 
     use super::*;
     use crate::fit::CompressedFit;
+    use assertable::Assertable;
 
     #[test]
     fn compresses_into_names_only() {
         let mut ship = Fit::new(Cow::Owned("aaa".to_string()), SHIP.deref());
         ship.add_module(MICROWARPDRIVE.deref());
-        let CompressedFit {
-            name,
-            ship,
-            high_slots,
-            mut med_slots,
-            low_slots,
-        } = ship.compress();
-        assert_eq!("aaa", name.to_string());
-        assert_eq!("Caracal", ship.to_string());
-        assert_eq!(
-            "5MN Microwarpdrive",
-            med_slots.pop().unwrap_or(Cow::Borrowed("Nothing"))
-        );
-        assert!(high_slots.is_empty());
-        assert!(med_slots.is_empty());
-        assert!(low_slots.is_empty());
+        let compressed = ship.compress();
+        compressed.assert_eq(&CompressedFit::new(
+            "aaa",
+            "Caracal",
+            vec!["5MN Microwarpdrive"],
+            Vec::<String>::new(),
+            Vec::<String>::new(),
+        ));
     }
 
     #[test]
@@ -147,12 +140,8 @@ mod fit_compression {
             MICROWARPDRIVE.deref().clone(),
         );
         let fit = compressed_fit.decompress(&ships, &modules).unwrap();
-        assert!(fit.ship.clone().eq(SHIP.deref()));
-        assert!(fit.med_slots[0]
-            .as_ref()
-            .unwrap()
-            .inner_module
-            .clone()
-            .eq(MICROWARPDRIVE.deref()))
+        let mut expected = Fit::new("", SHIP.deref());
+        expected.add_module(MICROWARPDRIVE.deref());
+        expected.assert_eq(&fit);
     }
 }

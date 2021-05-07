@@ -4,12 +4,13 @@ use crate::stats::{
     capacitor::Capacitor, defense::Defense, drone::Drone, fitting::Fitting,
     movement::Movement, sensor::Sensor,
 };
+use assertable::Assertable;
 use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
 #[cfg(feature = "ts")]
 use ts_rs::TS;
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Assertable)]
 #[cfg_attr(feature = "ts", derive(TS))]
 pub struct Ship<'a> {
     pub name: Cow<'a, str>,
@@ -75,7 +76,7 @@ impl Ship<'_> {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Assertable)]
 #[cfg_attr(feature = "ts", derive(TS))]
 pub enum RigSize {
     Small,
@@ -84,7 +85,7 @@ pub enum RigSize {
     Capital,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Assertable)]
 #[cfg_attr(feature = "ts", derive(TS))]
 pub enum SensorStrengthType {
     Ladar,
