@@ -15,7 +15,7 @@ pub type MovementMod = Option<MovementModifications>;
 pub type SensorMod = Option<SensorModifications>;
 pub type DroneMod = Option<DroneModifications>;
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Assertable)]
+#[derive(Debug, Clone, Serialize, Deserialize, Assertable)]
 pub struct StaticModule<'a> {
     pub name: Cow<'a, str>,
 
@@ -113,7 +113,7 @@ impl<'a> StaticModule<'a> {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Assertable)]
+#[derive(Debug, Clone, Serialize, Deserialize, Assertable)]
 pub enum ModuleSlot {
     High,
     Med,
@@ -121,7 +121,7 @@ pub enum ModuleSlot {
     Rig,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Assertable)]
+#[derive(Debug, Clone, Serialize, Deserialize, Assertable)]
 pub enum HardPoint {
     Turret,
     Launcher,

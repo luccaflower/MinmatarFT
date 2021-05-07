@@ -13,6 +13,7 @@ use crate::{
     static_module::{ModuleSlot, StaticModule},
     stats::ModificationType,
 };
+use assertable::Assertable;
 use once_cell::sync::Lazy;
 use std::borrow::Cow;
 
@@ -89,7 +90,7 @@ mod an_empty_fit {
     #[test]
     fn matches_the_base_stats_of_its_ship() {
         let fit = Fit::new(Cow::Borrowed(""), &SHIP);
-        assert_eq!(fit.calculate_stats().fitting, SHIP.fitting_stats);
+        fit.calculate_stats().fitting.assert_eq(&SHIP.fitting_stats)
     }
 }
 

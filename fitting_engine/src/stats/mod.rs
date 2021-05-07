@@ -76,7 +76,12 @@ where
     T: IsNumber,
 {
     fn eq(&self, other: &Self) -> bool {
-        self.additive() == other.additive() && self.deref().eq(other)
+        (match (self, other) {
+            (Self::Additive(_), Self::Additive(_)) => true,
+            (Self::Multiplicative(_), Self::Multiplicative(_)) => true,
+            (Self::FittingCost(_), Self::FittingCost(_)) => true,
+            (_, _) => false,
+        }) && self.deref().eq(other)
     }
 }
 

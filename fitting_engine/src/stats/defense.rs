@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 #[cfg(feature = "ts")]
 use ts_rs::TS;
 
-#[derive(Debug, Clone, Serialize, Deserialize, Stat, PartialEq, Assertable)]
+#[derive(Debug, Clone, Serialize, Deserialize, Stat, Assertable)]
 #[cfg_attr(feature = "ts", derive(TS))]
 pub struct Defense {
     pub hull_hp: f64,

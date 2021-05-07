@@ -3,7 +3,7 @@ use std::str::FromStr;
 #[cfg(feature = "ts")]
 use ts_rs::TS;
 
-#[derive(Debug, Clone, PartialEq, Assertable)]
+#[derive(Debug, Clone, Assertable)]
 #[cfg_attr(feature = "ts", derive(TS))]
 pub enum FrigateType {
     T1,

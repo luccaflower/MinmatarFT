@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 #[cfg(feature = "ts")]
 use ts_rs::TS;
 
-#[derive(Debug, Clone, Serialize, Stat, Deserialize, PartialEq, Assertable)]
+#[derive(Debug, Clone, Serialize, Stat, Deserialize, Assertable)]
 #[cfg_attr(feature = "ts", derive(TS))]
 pub struct Sensor {
     pub targeting_range: f64,

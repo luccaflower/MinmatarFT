@@ -10,7 +10,7 @@ use std::borrow::Cow;
 #[cfg(feature = "ts")]
 use ts_rs::TS;
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Assertable)]
+#[derive(Debug, Clone, Serialize, Deserialize, Assertable)]
 #[cfg_attr(feature = "ts", derive(TS))]
 pub struct Ship<'a> {
     pub name: Cow<'a, str>,
@@ -76,7 +76,7 @@ impl Ship<'_> {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Assertable)]
+#[derive(Debug, Clone, Serialize, Deserialize, Assertable)]
 #[cfg_attr(feature = "ts", derive(TS))]
 pub enum RigSize {
     Small,
@@ -85,7 +85,7 @@ pub enum RigSize {
     Capital,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Assertable)]
+#[derive(Debug, Clone, Serialize, Deserialize, Assertable)]
 #[cfg_attr(feature = "ts", derive(TS))]
 pub enum SensorStrengthType {
     Ladar,
