@@ -908,7 +908,8 @@ dependencies = [
 [[package]]
 name = "shoulda"
 version = "0.1.0"
-source = "git+https://github.com/cramt/shoulda.git?branch=main#c93e56c7037696271d755065e264de8887336fef"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a235b69c7a5eb461e4a00f7884cb3a3b912488a8becbe3fbc85002b71edb7efa"
 dependencies = [
  "shoulda_core",
  "shoulda_macro",
@@ -917,7 +918,8 @@ dependencies = [
 [[package]]
 name = "shoulda_core"
 version = "0.1.0"
-source = "git+https://github.com/cramt/shoulda.git?branch=main#c93e56c7037696271d755065e264de8887336fef"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "228a0ad6ed728afd9f6b4b4112ff5cf6b327f2d6f864eacbf511ac030ab05ada"
 dependencies = [
  "once_cell",
 ]
@@ -925,7 +927,8 @@ dependencies = [
 [[package]]
 name = "shoulda_macro"
 version = "0.1.0"
-source = "git+https://github.com/cramt/shoulda.git?branch=main#c93e56c7037696271d755065e264de8887336fef"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "09ebddc79733e1c765ccf844aad58b06797e345f434cd307015e3732b75e3ddd"
 dependencies = [
  "quote",
  "syn",

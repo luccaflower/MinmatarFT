@@ -84,7 +84,7 @@ mod any_fit {
                 .as_ref()
                 .filter(|x| x.inner_module.name == MICROWARPDRIVE.name)
                 .is_some()
-        })
+        });
     }
 }
 
@@ -96,7 +96,7 @@ mod an_empty_fit {
         fit.calculate_stats()
             .fitting
             .should()
-            .eq(&SHIP.fitting_stats)
+            .eq(&SHIP.fitting_stats);
     }
 }
 
@@ -112,7 +112,7 @@ mod a_non_empty_fit {
             .to_vec()
             .should()
             .not()
-            .contains(|x| x.is_some())
+            .contains(|x| x.is_some());
     }
 }
 

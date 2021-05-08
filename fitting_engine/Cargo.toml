@@ -15,4 +15,4 @@ fitting_engine_macros = { path = "../fitting_engine_macros" }
 once_cell = "1.5.2"
 approx = "0.4.0"
 ts-rs = { git = "https://github.com/cramt/ts-rs.git", branch = "main", optional = true }
-shoulda = { git = "https://github.com/cramt/shoulda.git", branch = "main"}
+shoulda = "0.1.0"
