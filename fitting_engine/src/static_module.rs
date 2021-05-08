@@ -8,12 +8,12 @@ use serde::{Deserialize, Serialize};
 use shoulda::Shoulda;
 use std::borrow::Cow;
 
-pub type FittingMod = Option<FittingModifications>;
-pub type CapacitorMod = Option<CapacitorModifications>;
-pub type DefenseMod = Option<DefenseModifications>;
-pub type MovementMod = Option<MovementModifications>;
-pub type SensorMod = Option<SensorModifications>;
-pub type DroneMod = Option<DroneModifications>;
+pub type FittingMod = FittingModifications;
+pub type CapacitorMod = CapacitorModifications;
+pub type DefenseMod = DefenseModifications;
+pub type MovementMod = MovementModifications;
+pub type SensorMod = SensorModifications;
+pub type DroneMod = DroneModifications;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Shoulda)]
 pub struct StaticModule<'a> {
@@ -31,6 +31,8 @@ pub struct StaticModule<'a> {
 
     pub module_slot: ModuleSlot,
     pub hard_point: Option<HardPoint>,
+
+    pub active: bool,
 }
 
 impl<'a> StaticModule<'a> {
@@ -49,6 +51,8 @@ impl<'a> StaticModule<'a> {
 
         module_slot: ModuleSlot,
         hard_point: Option<HardPoint>,
+
+        active: bool,
     ) -> Self {
         Self {
             name: name.into(),
@@ -63,13 +67,12 @@ impl<'a> StaticModule<'a> {
             drone,
             module_slot,
             hard_point,
+            active,
         }
     }
 
     pub fn active(&self) -> bool {
-        self.active_defense.is_some()
-            || self.active_movement.is_some()
-            || self.active_sensor.is_some()
+        self.active
     }
 
     pub fn active_mods(

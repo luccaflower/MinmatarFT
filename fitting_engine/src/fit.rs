@@ -97,12 +97,6 @@ impl<'a> Fit<'a> {
     }
 
     pub fn calculate_stats(&self) -> FitStats {
-        fn maybe_push<'a, T>(v: &mut Vec<&'a T>, val: &'a Option<T>) {
-            let val = val.as_ref();
-            if let Some(val) = val {
-                v.push(val)
-            }
-        }
         let (fitting, capacitor, defense, movement, sensor, drone) = self
             .high_slots
             .iter()
@@ -123,12 +117,12 @@ impl<'a> Fit<'a> {
                  x| {
                     let (fitting, capacitor, defense, movement, sensor, drone) =
                         x.modifications();
-                    maybe_push(&mut fitting_vec, fitting);
-                    maybe_push(&mut capacitor_vec, capacitor);
-                    maybe_push(&mut defense_vec, defense);
-                    maybe_push(&mut movement_vec, movement);
-                    maybe_push(&mut sensor_vec, sensor);
-                    maybe_push(&mut drone_vec, drone);
+                    fitting_vec.push(fitting);
+                    capacitor_vec.push(capacitor);
+                    defense_vec.push(defense);
+                    movement_vec.push(movement);
+                    sensor_vec.push(sensor);
+                    drone_vec.push(drone);
                     (
                         fitting_vec,
                         capacitor_vec,

@@ -7,3 +7,6 @@ generate_all_data!();
 pub fn get_all() -> &'static [Ship<'static>] {
     &ALL_SHIPS
 }
+
+#[test]
+fn build() {}

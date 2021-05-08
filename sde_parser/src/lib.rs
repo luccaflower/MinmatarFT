@@ -27,6 +27,7 @@ use std::fs::File;
 use std::io;
 use std::io::Write;
 
+mod extract_resistance;
 mod faction_ids;
 pub mod model;
 mod ship_type_ids;
@@ -234,21 +235,135 @@ pub fn parse<'a, T: Into<InputSdeData>>(
                         .map(|(x, _)| ModificationType::Multiplicative(*x))
                         .unwrap_or(ModificationType::default()),
                 );
-            let neut_resistance = v.get(&2267);
+            let capacitor_recharge_time = v
+                .get(&144)
+                .map(|(x, _)| ModificationType::Multiplicative(*x))
+                .unwrap_or(ModificationType::default());
+            //let neut_resistance = v.get(&2267);
+            //TODO: neut
+            let neut_resistance = ModificationType::<f64>::default();
+
+            let capacitor = CapacitorModifications::new(
+                capacitor_amount,
+                capacitor_recharge_time,
+                neut_resistance,
+            );
+            let (
+                (
+                    hull_exp_resists_passive,
+                    armor_exp_resists_passive,
+                    shield_exp_resists_passive,
+                ),
+                (
+                    hull_exp_resists_active,
+                    armor_exp_resists_active,
+                    shield_exp_resists_active,
+                ),
+                active1,
+            ) = extract_resistance::extract_resistance(
+                &v, g, 975, 268, 272, 985,
+            );
+
+            let (
+                (
+                    hull_em_resists_passive,
+                    armor_em_resists_passive,
+                    shield_em_resists_passive,
+                ),
+                (
+                    hull_em_resists_active,
+                    armor_em_resists_active,
+                    shield_em_resists_active,
+                ),
+                active2,
+            ) = extract_resistance::extract_resistance(
+                &v, g, 974, 267, 271, 984,
+            );
+
+            let (
+                (
+                    hull_kinetic_resists_passive,
+                    armor_kinetic_resists_passive,
+                    shield_kinetic_resists_passive,
+                ),
+                (
+                    hull_kinetic_resists_active,
+                    armor_kinetic_resists_active,
+                    shield_kinetic_resists_active,
+                ),
+                active3,
+            ) = extract_resistance::extract_resistance(
+                &v, g, 976, 269, 273, 986,
+            );
+
+            let (
+                (
+                    hull_thermal_resists_passive,
+                    armor_thermal_resists_passive,
+                    shield_thermal_resists_passive,
+                ),
+                (
+                    hull_thermal_resists_active,
+                    armor_thermal_resists_active,
+                    shield_thermal_resists_active,
+                ),
+                active4,
+            ) = extract_resistance::extract_resistance(
+                &v, g, 977, 270, 274, 987,
+            );
+
+            let active_defense = DefenseModifications::new(
+                Default::default(),
+                hull_em_resists_active,
+                hull_thermal_resists_active,
+                hull_kinetic_resists_active,
+                hull_exp_resists_active,
+                Default::default(),
+                armor_em_resists_active,
+                armor_thermal_resists_active,
+                armor_kinetic_resists_active,
+                armor_exp_resists_active,
+                Default::default(),
+                shield_em_resists_active,
+                shield_thermal_resists_active,
+                shield_kinetic_resists_active,
+                shield_exp_resists_active,
+                Default::default(),
+            );
+
+            let passive_defense = DefenseModifications::new(
+                Default::default(),
+                hull_em_resists_passive,
+                hull_thermal_resists_passive,
+                hull_kinetic_resists_passive,
+                hull_exp_resists_passive,
+                Default::default(),
+                armor_em_resists_passive,
+                armor_thermal_resists_passive,
+                armor_kinetic_resists_passive,
+                armor_exp_resists_passive,
+                Default::default(),
+                shield_em_resists_passive,
+                shield_thermal_resists_passive,
+                shield_kinetic_resists_passive,
+                shield_exp_resists_passive,
+                Default::default(),
+            );
 
             StaticModule::new(
-                "",
-                None,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None,
+                t.name.en.unwrap(),
+                fitting,
+                capacitor,
+                passive_defense,
+                active_defense,
+                Default::default(),
+                Default::default(),
+                Default::default(),
+                Default::default(),
+                Default::default(),
                 ModuleSlot::High,
-                None,
+                Default::default(),
+                active1 || active2 || active3 || active4,
             )
         })
         .map(|x| (x.name.to_string(), x))

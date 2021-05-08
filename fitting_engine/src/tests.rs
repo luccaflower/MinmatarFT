@@ -45,22 +45,23 @@ pub static SHIP: Lazy<Ship> = Lazy::new(|| {
 pub static MICROWARPDRIVE: Lazy<StaticModule> = Lazy::new(|| {
     StaticModule::new(
         "5MN Microwarpdrive",
-        None,
-        None,
-        None,
-        None,
-        Some(MovementModifications::new(
+        Default::default(),
+        Default::default(),
+        Default::default(),
+        Default::default(),
+        MovementModifications::new(
             ModificationType::Additive(2.1),
             ModificationType::Additive(1.0),
             ModificationType::Additive(1.0),
             ModificationType::Additive(1.0),
-        )),
-        None,
-        None,
-        None,
-        None,
+        ),
+        Default::default(),
+        Default::default(),
+        Default::default(),
+        Default::default(),
         ModuleSlot::Med,
-        None,
+        Default::default(),
+        false,
     )
 });
 
