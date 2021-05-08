@@ -1,11 +1,11 @@
 use crate::stats::Stat;
-use assertable::Assertable;
 use fitting_engine_macros::*;
 use serde::{Deserialize, Serialize};
+use shoulda::Shoulda;
 #[cfg(feature = "ts")]
 use ts_rs::TS;
 
-#[derive(Debug, Clone, Serialize, Deserialize, Stat, Assertable)]
+#[derive(Debug, Clone, Serialize, Deserialize, Stat, Shoulda)]
 #[cfg_attr(feature = "ts", derive(TS))]
 pub struct Drone {
     pub control_range: u32,

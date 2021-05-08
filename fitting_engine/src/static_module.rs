@@ -4,8 +4,8 @@ use crate::stats::drone::DroneModifications;
 use crate::stats::fitting::FittingModifications;
 use crate::stats::movement::MovementModifications;
 use crate::stats::sensor::SensorModifications;
-use assertable::Assertable;
 use serde::{Deserialize, Serialize};
+use shoulda::Shoulda;
 use std::borrow::Cow;
 
 pub type FittingMod = Option<FittingModifications>;
@@ -15,7 +15,7 @@ pub type MovementMod = Option<MovementModifications>;
 pub type SensorMod = Option<SensorModifications>;
 pub type DroneMod = Option<DroneModifications>;
 
-#[derive(Debug, Clone, Serialize, Deserialize, Assertable)]
+#[derive(Debug, Clone, Serialize, Deserialize, Shoulda)]
 pub struct StaticModule<'a> {
     pub name: Cow<'a, str>,
 
@@ -113,7 +113,7 @@ impl<'a> StaticModule<'a> {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, Assertable)]
+#[derive(Debug, Clone, Serialize, Deserialize, Shoulda)]
 pub enum ModuleSlot {
     High,
     Med,
@@ -121,7 +121,7 @@ pub enum ModuleSlot {
     Rig,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, Assertable)]
+#[derive(Debug, Clone, Serialize, Deserialize, Shoulda)]
 pub enum HardPoint {
     Turret,
     Launcher,

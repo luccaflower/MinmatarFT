@@ -1,11 +1,11 @@
 use crate::stats::Stat;
-use assertable::Assertable;
 use fitting_engine_macros::*;
 use serde::{Deserialize, Serialize};
+use shoulda::Shoulda;
 #[cfg(feature = "ts")]
 use ts_rs::TS;
 
-#[derive(Debug, Clone, Serialize, Stat, Deserialize, Assertable)]
+#[derive(Debug, Clone, Serialize, Stat, Deserialize, Shoulda)]
 #[cfg_attr(feature = "ts", derive(TS))]
 pub struct Sensor {
     pub targeting_range: f64,

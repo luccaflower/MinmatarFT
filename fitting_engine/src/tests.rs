@@ -13,8 +13,8 @@ use crate::{
     static_module::{ModuleSlot, StaticModule},
     stats::ModificationType,
 };
-use assertable::Assertable;
 use once_cell::sync::Lazy;
+use shoulda::Shoulda;
 use std::borrow::Cow;
 
 pub static SHIP: Lazy<Ship> = Lazy::new(|| {
@@ -66,29 +66,25 @@ pub static MICROWARPDRIVE: Lazy<StaticModule> = Lazy::new(|| {
 
 mod any_fit {
     use super::*;
-    use assertable::core::specific_assert::assert_true::AssertTrue;
 
     #[test]
     fn has_a_slot_layout_matching_its_associated_ship() {
         let fit = Fit::new(Cow::Borrowed(""), &SHIP);
-        fit.high_slots.len().assert_eq(&(SHIP.high_slots as usize));
-        fit.med_slots.len().assert_eq(&(SHIP.med_slots as usize));
-        fit.low_slots.len().assert_eq(&(SHIP.low_slots as usize));
+        fit.high_slots.len().should().eq(SHIP.high_slots as usize);
+        fit.med_slots.len().should().eq(SHIP.med_slots as usize);
+        fit.low_slots.len().should().eq(SHIP.low_slots as usize);
     }
 
     #[test]
     fn can_add_a_new_module_to_an_empty_slot() {
         let mut fit = Fit::new(Cow::Borrowed(""), &SHIP);
         fit.add_module(&MICROWARPDRIVE);
-        fit.med_slots
-            .iter()
-            .any(|module| {
-                module
-                    .as_ref()
-                    .filter(|x| x.inner_module.name == MICROWARPDRIVE.name)
-                    .is_some()
-            })
-            .assert_true()
+        fit.med_slots.to_vec().should().contains(|module| {
+            module
+                .as_ref()
+                .filter(|x| x.inner_module.name == MICROWARPDRIVE.name)
+                .is_some()
+        })
     }
 }
 
@@ -97,20 +93,26 @@ mod an_empty_fit {
     #[test]
     fn matches_the_base_stats_of_its_ship() {
         let fit = Fit::new(Cow::Borrowed(""), &SHIP);
-        fit.calculate_stats().fitting.assert_eq(&SHIP.fitting_stats)
+        fit.calculate_stats()
+            .fitting
+            .should()
+            .eq(&SHIP.fitting_stats)
     }
 }
 
 mod a_non_empty_fit {
     use super::*;
-    use assertable::core::specific_assert::assert_false::AssertFalse;
 
     #[test]
     fn can_remove_a_module() {
         let mut fit = Fit::new(Cow::Borrowed(""), &SHIP);
         fit.add_module(&MICROWARPDRIVE);
         fit.remove_module(ModuleSlot::Med, 0);
-        fit.med_slots.iter().any(|x| x.is_some()).assert_false()
+        fit.med_slots
+            .to_vec()
+            .should()
+            .not()
+            .contains(|x| x.is_some())
     }
 }
 
@@ -119,14 +121,14 @@ mod fit_compression {
 
     use super::*;
     use crate::fit::CompressedFit;
-    use assertable::Assertable;
+    use shoulda::Shoulda;
 
     #[test]
     fn compresses_into_names_only() {
         let mut ship = Fit::new(Cow::Owned("aaa".to_string()), SHIP.deref());
         ship.add_module(MICROWARPDRIVE.deref());
         let compressed = ship.compress();
-        compressed.assert_eq(&CompressedFit::new(
+        compressed.should().eq(CompressedFit::new(
             "aaa",
             "Caracal",
             vec!["5MN Microwarpdrive"],
@@ -152,6 +154,6 @@ mod fit_compression {
         let fit = compressed_fit.decompress(&ships, &modules).unwrap();
         let mut expected = Fit::new("", SHIP.deref());
         expected.add_module(MICROWARPDRIVE.deref());
-        expected.assert_eq(&fit);
+        expected.should().eq(fit);
     }
 }

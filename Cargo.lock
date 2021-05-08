@@ -35,32 +35,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "assertable"
-version = "0.1.0"
-source = "git+https://github.com/cramt/assertable.git?branch=main#a6f7647f39649577622a166664228cf0a1126917"
-dependencies = [
- "assertable_core",
- "assertable_macro",
-]
-
-[[package]]
-name = "assertable_core"
-version = "0.1.0"
-source = "git+https://github.com/cramt/assertable.git?branch=main#a6f7647f39649577622a166664228cf0a1126917"
-dependencies = [
- "once_cell",
-]
-
-[[package]]
-name = "assertable_macro"
-version = "0.1.0"
-source = "git+https://github.com/cramt/assertable.git?branch=main#a6f7647f39649577622a166664228cf0a1126917"
-dependencies = [
- "quote",
- "syn",
-]
-
-[[package]]
 name = "async-trait"
 version = "0.1.42"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -191,11 +165,11 @@ name = "fitting_engine"
 version = "0.1.0"
 dependencies = [
  "approx",
- "assertable",
  "fitting_engine_macros",
  "funty",
  "once_cell",
  "serde",
+ "shoulda",
  "ts-rs",
 ]
 
@@ -929,6 +903,32 @@ dependencies = [
  "linked-hash-map",
  "serde",
  "yaml-rust",
+]
+
+[[package]]
+name = "shoulda"
+version = "0.1.0"
+source = "git+https://github.com/cramt/shoulda.git?branch=main#c93e56c7037696271d755065e264de8887336fef"
+dependencies = [
+ "shoulda_core",
+ "shoulda_macro",
+]
+
+[[package]]
+name = "shoulda_core"
+version = "0.1.0"
+source = "git+https://github.com/cramt/shoulda.git?branch=main#c93e56c7037696271d755065e264de8887336fef"
+dependencies = [
+ "once_cell",
+]
+
+[[package]]
+name = "shoulda_macro"
+version = "0.1.0"
+source = "git+https://github.com/cramt/shoulda.git?branch=main#c93e56c7037696271d755065e264de8887336fef"
+dependencies = [
+ "quote",
+ "syn",
 ]
 
 [[package]]

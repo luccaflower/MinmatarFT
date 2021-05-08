@@ -1,9 +1,9 @@
-use assertable::Assertable;
 use serde::{Deserialize, Serialize};
+use shoulda::Shoulda;
 #[cfg(feature = "ts")]
 use ts_rs::TS;
 
-#[derive(Debug, Clone, Serialize, Deserialize, Assertable)]
+#[derive(Debug, Clone, Serialize, Deserialize, Shoulda)]
 #[cfg_attr(feature = "ts", derive(TS))]
 pub enum Faction {
     Amarr,

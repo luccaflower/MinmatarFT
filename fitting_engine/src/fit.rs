@@ -3,8 +3,8 @@ use crate::module_instance::ModuleInstance;
 use crate::ship::Ship;
 use crate::static_module::{ModuleSlot, StaticModule};
 use crate::stats::Stat;
-use assertable::Assertable;
 use serde::{Deserialize, Serialize};
+use shoulda::Shoulda;
 use std::borrow::Cow;
 use std::collections::HashMap;
 use std::ops::Deref;
@@ -13,7 +13,7 @@ use ts_rs::TS;
 
 pub type Modules<'a> = Box<[Option<ModuleInstance<'a>>]>;
 
-#[derive(Debug, Clone, Assertable)]
+#[derive(Debug, Clone, Shoulda)]
 pub struct Fit<'a> {
     pub name: Cow<'a, str>,
     pub ship: &'a Ship<'a>,
@@ -155,7 +155,7 @@ impl<'a> Into<CompressedFit<'a>> for Fit<'a> {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, Assertable)]
+#[derive(Debug, Clone, Serialize, Deserialize, Shoulda)]
 #[cfg_attr(feature = "ts", derive(TS))]
 pub struct CompressedFit<'a> {
     pub name: Cow<'a, str>,

@@ -1,9 +1,9 @@
-use assertable::Assertable;
+use shoulda::Shoulda;
 use std::str::FromStr;
 #[cfg(feature = "ts")]
 use ts_rs::TS;
 
-#[derive(Debug, Clone, Assertable)]
+#[derive(Debug, Clone, Shoulda)]
 #[cfg_attr(feature = "ts", derive(TS))]
 pub enum FrigateType {
     T1,
