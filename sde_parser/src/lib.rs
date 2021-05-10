@@ -327,13 +327,37 @@ pub fn parse<'a, T: Into<InputSdeData>>(
                 (ModificationType::default(), shield_hp)
             };
 
+            let armor_hp = v
+                .get(&335)
+                .map(|(x, _)| ModificationType::Multiplicative(*x))
+                .unwrap_or(
+                    v.get(&1159)
+                        .map(|(x, _)| ModificationType::Additive(*x))
+                        .unwrap_or(ModificationType::default()),
+                );
+            let (armor_hp_active, armor_hp_passive) = if v.get(&73).is_some() {
+                (armor_hp, ModificationType::default())
+            } else {
+                (ModificationType::default(), armor_hp)
+            };
+
+            let hull_hp = v
+                .get(&327)
+                .map(|(x, _)| ModificationType::Multiplicative(*x))
+                .unwrap_or(ModificationType::default());
+            let (hull_hp_active, hull_hp_passive) = if v.get(&73).is_some() {
+                (hull_hp, ModificationType::default())
+            } else {
+                (ModificationType::default(), hull_hp)
+            };
+
             let active_defense = DefenseModifications::new(
-                Default::default(),
+                hull_hp_active,
                 hull_em_resists_active,
                 hull_thermal_resists_active,
                 hull_kinetic_resists_active,
                 hull_exp_resists_active,
-                Default::default(),
+                armor_hp_active,
                 armor_em_resists_active,
                 armor_thermal_resists_active,
                 armor_kinetic_resists_active,
@@ -347,12 +371,12 @@ pub fn parse<'a, T: Into<InputSdeData>>(
             );
 
             let passive_defense = DefenseModifications::new(
-                Default::default(),
+                hull_hp_passive,
                 hull_em_resists_passive,
                 hull_thermal_resists_passive,
                 hull_kinetic_resists_passive,
                 hull_exp_resists_passive,
-                Default::default(),
+                armor_hp_passive,
                 armor_em_resists_passive,
                 armor_thermal_resists_passive,
                 armor_kinetic_resists_passive,
