@@ -312,6 +312,21 @@ pub fn parse<'a, T: Into<InputSdeData>>(
                 &v, g, 977, 270, 274, 987,
             );
 
+            let shield_hp = v
+                .get(&337)
+                .map(|(x, _)| ModificationType::Multiplicative(*x))
+                .unwrap_or(
+                    v.get(&72)
+                        .map(|(x, _)| ModificationType::Additive(*x))
+                        .unwrap_or(ModificationType::default()),
+                );
+            let (shield_hp_active, shield_hp_passive) = if v.get(&73).is_some()
+            {
+                (shield_hp, ModificationType::default())
+            } else {
+                (ModificationType::default(), shield_hp)
+            };
+
             let active_defense = DefenseModifications::new(
                 Default::default(),
                 hull_em_resists_active,
@@ -323,7 +338,7 @@ pub fn parse<'a, T: Into<InputSdeData>>(
                 armor_thermal_resists_active,
                 armor_kinetic_resists_active,
                 armor_exp_resists_active,
-                Default::default(),
+                shield_hp_active,
                 shield_em_resists_active,
                 shield_thermal_resists_active,
                 shield_kinetic_resists_active,
@@ -342,7 +357,7 @@ pub fn parse<'a, T: Into<InputSdeData>>(
                 armor_thermal_resists_passive,
                 armor_kinetic_resists_passive,
                 armor_exp_resists_passive,
-                Default::default(),
+                shield_hp_passive,
                 shield_em_resists_passive,
                 shield_thermal_resists_passive,
                 shield_kinetic_resists_passive,
